@@ -23,7 +23,7 @@ export function Navbar() {
           <div className="w-8 h-8 bg-accent rounded-lg flex items-center justify-center">
             <Calendar className="w-5 h-5 text-accent-foreground" />
           </div>
-          <span className="text-xl font-bold text-foreground">LifeLine</span>
+          <span className="text-xl font-bold text-foreground">Chronos</span>
         </Link>
 
         {/* Navigation Links */}

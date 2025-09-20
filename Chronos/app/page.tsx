@@ -41,7 +41,7 @@ export default function LandingPage() {
             <Link href="#community" className="text-muted-foreground hover:text-foreground transition-colors">
               Community
             </Link>
-            <Link href="#timeline" className="text-muted-foreground hover:text-foreground transition-colors">
+            <Link href="timeline" className="text-muted-foreground hover:text-foreground transition-colors">
               Timeline
             </Link>
           </nav>

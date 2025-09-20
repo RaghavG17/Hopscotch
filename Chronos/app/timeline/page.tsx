@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
 import { Plus, Upload, Sparkles, Target, Clock, Edit3, Save, X, ChevronDown, ChevronUp } from "lucide-react"
+import { Navbar } from "@/components/ui/navbar"
 
 interface Milestone {
   id: string
@@ -152,7 +153,7 @@ export default function TimelinePage() {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <div className="relative">
-        <p className="text-center py-5">add reusable navbar component here</p>
+        <Navbar />
 
         <div className="absolute top-16 right-10">
           <Button
