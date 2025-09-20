@@ -1,13 +1,14 @@
 import Database from 'better-sqlite3';
 import path from 'path';
 
-// Database file path
-const dbPath = path.join(process.cwd(), 'data', 'chronos.db');
+// Database file path - use absolute path to avoid Next.js working directory issues
+const dbPath = path.resolve(__dirname, '..', 'data', 'chronos.db');
 
 // Ensure data directory exists
 import fs from 'fs';
-if (!fs.existsSync(path.join(process.cwd(), 'data'))) {
-  fs.mkdirSync(path.join(process.cwd(), 'data'), { recursive: true });
+const dataDir = path.dirname(dbPath);
+if (!fs.existsSync(dataDir)) {
+  fs.mkdirSync(dataDir, { recursive: true });
 }
 
 // Initialize database
