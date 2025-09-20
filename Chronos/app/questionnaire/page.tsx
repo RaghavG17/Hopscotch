@@ -16,8 +16,11 @@ interface QuestionnaireData {
   name: string
   age: string
   futureMatters: string
+  futureMattersOther: string // Added field for custom future matters input
   journeyStage: string
+  journeyStageOther: string // Added field for custom journey stage input
   yearPriority: string
+  yearPriorityOther: string // Added field for custom year priority input
   guidingValue: string
   bigGoal: string
 }
@@ -27,8 +30,11 @@ export default function QuestionnairePage() {
     name: "",
     age: "",
     futureMatters: "",
+    futureMattersOther: "", // Initialize custom input fields
     journeyStage: "",
+    journeyStageOther: "",
     yearPriority: "",
+    yearPriorityOther: "",
     guidingValue: "",
     bigGoal: "",
   })
@@ -43,7 +49,16 @@ export default function QuestionnairePage() {
   }
 
   const isFormValid = () => {
-    return Object.values(answers).every((value) => value.trim() !== "")
+    const requiredFields = [
+      answers.name.trim(),
+      answers.age.trim(),
+      answers.futureMatters.trim() || answers.futureMattersOther.trim(),
+      answers.journeyStage.trim() || answers.journeyStageOther.trim(),
+      answers.yearPriority.trim() || answers.yearPriorityOther.trim(),
+      answers.guidingValue.trim(),
+      answers.bigGoal.trim(),
+    ]
+    return requiredFields.every((field) => field !== "")
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -96,7 +111,7 @@ export default function QuestionnairePage() {
             <div className="w-8 h-8 bg-accent rounded-lg flex items-center justify-center shadow-sm">
               <Calendar className="w-5 h-5 text-accent-foreground" />
             </div>
-            <span className="text-xl font-bold text-foreground">LifeLine</span>
+            <span className="text-xl font-bold text-foreground">Chronos</span>
           </Link>
           <div className="text-sm text-muted-foreground">Tell us about yourself</div>
         </div>
@@ -167,7 +182,12 @@ export default function QuestionnairePage() {
                   </Label>
                   <RadioGroup
                     value={answers.futureMatters}
-                    onValueChange={(value) => handleInputChange("futureMatters", value)}
+                    onValueChange={(value) => {
+                      handleInputChange("futureMatters", value)
+                      if (value !== "Other") {
+                        handleInputChange("futureMattersOther", "")
+                      }
+                    }}
                     className="space-y-3"
                   >
                     {[
@@ -188,6 +208,22 @@ export default function QuestionnairePage() {
                         </Label>
                       </div>
                     ))}
+                    <div className="flex items-center space-x-3 p-4 rounded-lg border hover:bg-accent/5 transition-colors">
+                      <RadioGroupItem value="Other" id="future-other" />
+                      <Label htmlFor="future-other" className="cursor-pointer font-medium">
+                        Other:
+                      </Label>
+                    </div>
+                    {answers.futureMatters === "Other" && (
+                      <div className="ml-8 mt-2">
+                        <Input
+                          placeholder="Please specify..."
+                          value={answers.futureMattersOther}
+                          onChange={(e) => handleInputChange("futureMattersOther", e.target.value)}
+                          className="text-lg py-3 border-2 focus:border-accent/50"
+                        />
+                      </div>
+                    )}
                   </RadioGroup>
                 </div>
               </CardContent>
@@ -206,7 +242,12 @@ export default function QuestionnairePage() {
                   <Label className="text-lg font-medium">Where are you in your journey right now?</Label>
                   <RadioGroup
                     value={answers.journeyStage}
-                    onValueChange={(value) => handleInputChange("journeyStage", value)}
+                    onValueChange={(value) => {
+                      handleInputChange("journeyStage", value)
+                      if (value !== "Other") {
+                        handleInputChange("journeyStageOther", "")
+                      }
+                    }}
                     className="space-y-3"
                   >
                     {[
@@ -226,6 +267,22 @@ export default function QuestionnairePage() {
                         </Label>
                       </div>
                     ))}
+                    <div className="flex items-center space-x-3 p-4 rounded-lg border hover:bg-accent/5 transition-colors">
+                      <RadioGroupItem value="Other" id="journey-other" />
+                      <Label htmlFor="journey-other" className="cursor-pointer font-medium">
+                        Other:
+                      </Label>
+                    </div>
+                    {answers.journeyStage === "Other" && (
+                      <div className="ml-8 mt-2">
+                        <Input
+                          placeholder="Please specify..."
+                          value={answers.journeyStageOther}
+                          onChange={(e) => handleInputChange("journeyStageOther", e.target.value)}
+                          className="text-lg py-3 border-2 focus:border-accent/50"
+                        />
+                      </div>
+                    )}
                   </RadioGroup>
                 </div>
               </CardContent>
@@ -246,7 +303,12 @@ export default function QuestionnairePage() {
                   </Label>
                   <RadioGroup
                     value={answers.yearPriority}
-                    onValueChange={(value) => handleInputChange("yearPriority", value)}
+                    onValueChange={(value) => {
+                      handleInputChange("yearPriority", value)
+                      if (value !== "Other") {
+                        handleInputChange("yearPriorityOther", "")
+                      }
+                    }}
                     className="space-y-3"
                   >
                     {[
@@ -266,6 +328,22 @@ export default function QuestionnairePage() {
                         </Label>
                       </div>
                     ))}
+                    <div className="flex items-center space-x-3 p-4 rounded-lg border hover:bg-accent/5 transition-colors">
+                      <RadioGroupItem value="Other" id="priority-other" />
+                      <Label htmlFor="priority-other" className="cursor-pointer font-medium">
+                        Other:
+                      </Label>
+                    </div>
+                    {answers.yearPriority === "Other" && (
+                      <div className="ml-8 mt-2">
+                        <Input
+                          placeholder="Please specify..."
+                          value={answers.yearPriorityOther}
+                          onChange={(e) => handleInputChange("yearPriorityOther", e.target.value)}
+                          className="text-lg py-3 border-2 focus:border-accent/50"
+                        />
+                      </div>
+                    )}
                   </RadioGroup>
                 </div>
               </CardContent>
