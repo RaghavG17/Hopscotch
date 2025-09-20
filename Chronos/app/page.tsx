@@ -5,7 +5,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { AuthModal } from "@/components/auth/auth-modal"
 import { SimpleUserMenu } from "@/components/auth/simple-user-menu"
-import { DebugAuth } from "@/components/auth/debug-auth"
 import { useAuth } from "@/lib/auth-context"
 import {
   ArrowRight,
@@ -414,9 +413,6 @@ export default function LandingPage() {
         isOpen={isAuthModalOpen}
         onClose={() => setIsAuthModalOpen(false)}
       />
-
-      {/* Debug Component */}
-      <DebugAuth />
     </div>
   )
 }
