@@ -1,6 +1,12 @@
+"use client";
+
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { AuthModal } from "@/components/auth/auth-modal"
+import { SimpleUserMenu } from "@/components/auth/simple-user-menu"
+import { DebugAuth } from "@/components/auth/debug-auth"
+import { useAuth } from "@/lib/auth-context"
 import {
   ArrowRight,
   Calendar,
@@ -13,8 +19,11 @@ import {
   MessageCircle,
 } from "lucide-react"
 import Link from "next/link"
+import { useState } from "react"
 
 export default function LandingPage() {
+  const { currentUser } = useAuth();
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -37,9 +46,17 @@ export default function LandingPage() {
               Timeline
             </Link>
           </nav>
-          <Button variant="outline" size="sm">
-            Sign In
-          </Button>
+          {currentUser ? (
+            <SimpleUserMenu />
+          ) : (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setIsAuthModalOpen(true)}
+            >
+              Sign In
+            </Button>
+          )}
         </div>
       </header>
 
@@ -59,8 +76,12 @@ export default function LandingPage() {
               who share your aspirations.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="text-lg px-8 py-6">
-                Get Started Free
+              <Button
+                size="lg"
+                className="text-lg px-8 py-6"
+                onClick={() => setIsAuthModalOpen(true)}
+              >
+                {currentUser ? 'Go to Dashboard' : 'Get Started Free'}
                 <ArrowRight className="ml-2 w-5 h-5" />
               </Button>
               <Button variant="outline" size="lg" className="text-lg px-8 py-6 bg-transparent">
@@ -281,8 +302,13 @@ export default function LandingPage() {
             Join thousands of users who are already documenting their milestones and achieving their goals with
             LifeLine.
           </p>
-          <Button size="lg" variant="secondary" className="text-lg px-8 py-6">
-            Sign Up & Take Our Questionnaire
+          <Button
+            size="lg"
+            variant="secondary"
+            className="text-lg px-8 py-6"
+            onClick={() => setIsAuthModalOpen(true)}
+          >
+            {currentUser ? 'Start Building Your Timeline' : 'Sign Up & Take Our Questionnaire'}
             <ArrowRight className="ml-2 w-5 h-5" />
           </Button>
           <p className="text-sm mt-4 text-accent-foreground/70">
@@ -382,6 +408,15 @@ export default function LandingPage() {
           </div>
         </div>
       </footer>
+
+      {/* Auth Modal */}
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+      />
+
+      {/* Debug Component */}
+      <DebugAuth />
     </div>
   )
 }
