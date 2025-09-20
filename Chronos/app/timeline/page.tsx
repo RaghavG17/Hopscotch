@@ -104,58 +104,40 @@ export default function TimelinePage() {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <Link href="/" className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-accent rounded-lg flex items-center justify-center">
-              <Calendar className="w-5 h-5 text-accent-foreground" />
-            </div>
-            <span className="text-xl font-bold text-foreground">Chronos</span>
-          </Link>
-          <div className="flex items-center space-x-4">
-            <Button variant="outline" size="sm">
-              <Plus className="w-4 h-4 mr-2" />
-              Add Milestone
-            </Button>
-            <Button variant="outline" size="sm">
-              Profile
-            </Button>
-          </div>
-        </div>
-      </header>
+      <p className="text-center py-5">add reusable navbar component here</p>
 
       {/* Timeline Section */}
-      <section className="py-16">
+      <section className="pt-8 pb-12">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h1 className="text-5xl font-bold text-foreground mb-6">Your Life Timeline</h1>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+          <div className="text-center mb-8">
+            <h1 className="text-3xl font-bold text-foreground mb-2">Your Life Timeline</h1>
+            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
               Track your journey, set goals, and visualize your path to success
             </p>
           </div>
 
           <div className="relative">
-            <div className="overflow-x-auto pb-12">
+            <div className="overflow-x-auto pb-8">
               <div className="relative min-w-max px-12">
                 {/* Horizontal Timeline Line */}
                 <div className="absolute top-1/2 left-0 right-0 h-2 bg-accent/30 rounded-full transform -translate-y-1/2 z-0"></div>
 
                 {/* Staggered Milestones */}
-                <div className="flex items-center space-x-48 relative z-10 ">
+                <div className="flex items-center space-x-32 relative z-10">
                   {milestones.map((milestone, index) => (
                     <div key={milestone.id} className="flex flex-col items-center">
                       <div
-                        className={`flex flex-col items-center ${index % 2 === 0 ? "mb-16" : "mt-16 flex-col-reverse"}`}
+                        className={`flex flex-col items-center ${index % 2 === 0 ? "mb-8" : "mt-8 flex-col-reverse"}`}
                       >
                         {/* Year Label */}
-                        <h3 className={`text-2xl font-bold text-foreground ${index % 2 === 0 ? "mb-6" : "mt-6"}`}>
+                        <h3 className={`text-xl font-bold text-foreground ${index % 2 === 0 ? "mb-4" : "mt-4"}`}>
                           {milestone.year}
                         </h3>
 
                         {/* Milestone Card */}
                         <Dialog>
                           <DialogTrigger asChild>
-                            <Card className="w-64 h-64 cursor-pointer hover:shadow-2xl transition-all duration-300 group relative overflow-hidden border-2 border-border hover:border-accent">
+                            <Card className="w-44 h-44 cursor-pointer hover:shadow-2xl transition-all duration-300 group relative overflow-hidden border-2 border-border hover:border-accent">
                               <div
                                 className="absolute inset-0 bg-cover bg-center"
                                 style={{
@@ -165,12 +147,12 @@ export default function TimelinePage() {
                               >
                                 <div className="absolute inset-0 bg-black/40 group-hover:bg-black/30 transition-colors"></div>
                               </div>
-                              <CardContent className="relative z-10 p-6 h-full flex flex-col justify-between text-white">
+                              <CardContent className="relative z-10 p-4 h-full flex flex-col justify-between text-white">
                                 <div>
-                                  <h4 className="text-lg font-medium mb-2">{milestone.title}</h4>
-                                  <p className="text-sm opacity-90 line-clamp-3">{milestone.description}</p>
+                                  <h4 className="text-sm font-medium mb-2">{milestone.title}</h4>
+                                  <p className="text-xs opacity-90 line-clamp-3">{milestone.description}</p>
                                 </div>
-                                <Badge variant="secondary" className="self-start">
+                                <Badge variant="secondary" className="self-start text-xs">
                                   {milestone.shortTermGoals.length + milestone.longTermGoals.length} goals
                                 </Badge>
                               </CardContent>
@@ -179,17 +161,18 @@ export default function TimelinePage() {
                           <MilestoneModal milestone={milestone} onEdit={() => handleEditMilestone(milestone)} />
                         </Dialog>
 
+                        {/* Connecting Line */}
                         <div
                           className={`w-1 bg-accent/60 ${
                             index % 2 === 0
-                              ? "h-16" // Top milestones: line goes down to touch middle line
-                              : "h-16" // Bottom milestones: line goes up to touch middle line
+                              ? "h-12 mb-60" // Top milestones: line goes down to touch middle line
+                              : "h-12 mt-60" // Bottom milestones: line goes up to touch middle line
                           }`}
                         ></div>
                       </div>
 
                       {/* Timeline Dot */}
-                      <div className="absolute top-1/2 transform -translate-y-1/2 w-6 h-6 bg-accent rounded-full border-4 border-background shadow-lg z-20"></div>
+                      <div className="absolute top-1/2 transform -translate-y-1/2 w-4 h-4 bg-accent rounded-full border-2 border-background shadow-lg z-20"></div>
                     </div>
                   ))}
                 </div>
@@ -197,8 +180,8 @@ export default function TimelinePage() {
             </div>
 
             {/* Scroll Hint */}
-            <div className="text-center mt-8">
-              <p className="text-lg text-muted-foreground">← Scroll horizontally to explore your timeline →</p>
+            <div className="text-center mt-4">
+              <p className="text-sm text-muted-foreground">← Scroll horizontally to explore your timeline →</p>
             </div>
           </div>
         </div>
@@ -429,7 +412,7 @@ function MilestoneCard({ milestone, onEdit }: { milestone: Milestone; onEdit: ()
 // MilestoneModal component
 function MilestoneModal({ milestone, onEdit }: { milestone: Milestone; onEdit: () => void }) {
   return (
-    <DialogContent className="max-w-2xl">
+    <DialogContent className="max-w-3xl p-10">
       <DialogHeader>
         <DialogTitle className="flex items-center justify-between">
           <span className="text-xl">
