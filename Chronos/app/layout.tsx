@@ -1,13 +1,13 @@
 import type { Metadata } from 'next'
 import { GeistSans } from 'geist/font/sans'
 import { GeistMono } from 'geist/font/mono'
-import { Analytics } from '@vercel/analytics/next'
+import { AuthProvider } from '@/lib/auth-context'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'v0 App',
-  description: 'Created with v0',
-  generator: 'v0.app',
+  title: 'LifeLine - Turn Your Life Into a Visual Story',
+  description: 'Build interactive timelines of your milestones, get AI-powered goal suggestions, and connect with others who share your aspirations.',
+  generator: 'Next.js',
 }
 
 export default function RootLayout({
@@ -18,8 +18,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable}`}>
-        {children}
-        <Analytics />
+        <AuthProvider>
+          {children}
+        </AuthProvider>
       </body>
     </html>
   )
