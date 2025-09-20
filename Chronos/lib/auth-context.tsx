@@ -12,6 +12,7 @@ import {
 } from 'firebase/auth';
 import { auth } from './firebase';
 // Remove direct database import from client-side context
+import {useRouter } from "next/navigation"
 
 interface AuthContextType {
     currentUser: User | null;
@@ -35,6 +36,8 @@ export function useAuth() {
 export function AuthProvider({ children }: { children: React.ReactNode }) {
     const [currentUser, setCurrentUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
+    //this for pop up questionnaire
+    const router = useRouter();
 
     function signup(email: string, password: string) {
         return createUserWithEmailAndPassword(auth, email, password).then(() => {
@@ -54,19 +57,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     function signInWithGoogle() {
         const provider = new GoogleAuthProvider();
-        return signInWithPopup(auth, provider).then(() => {
-            // User login is handled by onAuthStateChanged
+        return signInWithPopup(auth, provider).then((result) => {
         });
     }
 
     useEffect(() => {
+        if (!router) return;
+    
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
             setCurrentUser(user);
 
             if (user) {
                 // Sync user with database via API
                 try {
-                    await fetch('/api/users/sync', {
+                    const res = await fetch('/api/users/sync', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -78,6 +82,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                             photoURL: user.photoURL
                         }),
                     });
+
+                    const data = await res.json();
+
+                    //only if the user is new, we redirect them to questionaire
+                    if (data.isNewUser) {
+                        console.log("testing redirecting new user to questionnaire");
+                        router.push("/questionnaire");
+                    }
                 } catch (error) {
                     console.error('Error syncing user with database:', error);
                 }
@@ -87,7 +99,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         });
 
         return unsubscribe;
-    }, []);
+    }, [router]);
 
     const value: AuthContextType = {
         currentUser,
