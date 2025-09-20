@@ -11,6 +11,7 @@ import {
     signInWithPopup
 } from 'firebase/auth';
 import { auth } from './firebase';
+// Remove direct database import from client-side context
 
 interface AuthContextType {
     currentUser: User | null;
@@ -59,8 +60,29 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
+        const unsubscribe = onAuthStateChanged(auth, async (user) => {
             setCurrentUser(user);
+
+            if (user) {
+                // Sync user with database via API
+                try {
+                    await fetch('/api/users/sync', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            firebaseUid: user.uid,
+                            email: user.email,
+                            displayName: user.displayName,
+                            photoURL: user.photoURL
+                        }),
+                    });
+                } catch (error) {
+                    console.error('Error syncing user with database:', error);
+                }
+            }
+
             setLoading(false);
         });
 

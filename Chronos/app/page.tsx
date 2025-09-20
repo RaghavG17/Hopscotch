@@ -79,14 +79,23 @@ export default function LandingPage() {
               who share your aspirations.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button
-                size="lg"
-                className="text-lg px-8 py-6"
-                onClick={() => setIsAuthModalOpen(true)}
-              >
-                {currentUser ? 'Go to Dashboard' : 'Get Started Free'}
-                <ArrowRight className="ml-2 w-5 h-5" />
-              </Button>
+              {currentUser ? (
+                <Link href="/dashboard">
+                  <Button size="lg" className="text-lg px-8 py-6">
+                    Go to Dashboard
+                    <ArrowRight className="ml-2 w-5 h-5" />
+                  </Button>
+                </Link>
+              ) : (
+                <Button
+                  size="lg"
+                  className="text-lg px-8 py-6"
+                  onClick={() => setIsAuthModalOpen(true)}
+                >
+                  Get Started Free
+                  <ArrowRight className="ml-2 w-5 h-5" />
+                </Button>
+              )}
               <Button variant="outline" size="lg" className="text-lg px-8 py-6 bg-transparent">
                 Watch Demo
               </Button>
@@ -106,8 +115,8 @@ export default function LandingPage() {
           </div>
         </div>
 
-          {/* Timeline Demo */}
-          <p className="text-center">replace with a screenshot of our timeline</p>
+        {/* Timeline Demo */}
+        <p className="text-center">replace with a screenshot of our timeline</p>
       </section>
 
       {/* Features Section */}
@@ -237,15 +246,24 @@ export default function LandingPage() {
             Join thousands of users who are already documenting their milestones and achieving their goals with
             Chronos.
           </p>
-          <Button
-            size="lg"
-            variant="secondary"
-            className="text-lg px-8 py-6"
-            onClick={() => setIsAuthModalOpen(true)}
-          >
-            {currentUser ? 'Start Building Your Timeline' : 'Sign Up & Take Our Questionnaire'}
-            <ArrowRight className="ml-2 w-5 h-5" />
-          </Button>
+          {currentUser ? (
+            <Link href="/dashboard">
+              <Button size="lg" variant="secondary" className="text-lg px-8 py-6">
+                Start Building Your Timeline
+                <ArrowRight className="ml-2 w-5 h-5" />
+              </Button>
+            </Link>
+          ) : (
+            <Button
+              size="lg"
+              variant="secondary"
+              className="text-lg px-8 py-6"
+              onClick={() => setIsAuthModalOpen(true)}
+            >
+              Sign Up & Take Our Questionnaire
+              <ArrowRight className="ml-2 w-5 h-5" />
+            </Button>
+          )}
           <p className="text-sm mt-4 text-accent-foreground/70">
             Free to start • No credit card required • 5-minute setup
           </p>
