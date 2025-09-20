@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Calendar, Users, Trophy } from "lucide-react";
+import { Calendar, Users, Trophy, User } from "lucide-react";
 
 export function Navbar() {
   const pathname = usePathname();
@@ -30,36 +30,43 @@ export function Navbar() {
         <nav className="hidden md:flex items-center space-x-6">
           <Link
             href="/timeline"
-            className={`flex items-center space-x-2 transition-colors ${
-              isActive("/timeline")
+            className={`flex items-center space-x-2 transition-colors ${isActive("/timeline")
                 ? "text-accent font-medium"
                 : "text-muted-foreground hover:text-foreground"
-            }`}
+              }`}
           >
             <Calendar className="w-4 h-4" />
             <span>Timeline</span>
           </Link>
           <Link
             href="/friends"
-            className={`flex items-center space-x-2 transition-colors ${
-              isActive("/friends")
+            className={`flex items-center space-x-2 transition-colors ${isActive("/friends")
                 ? "text-accent font-medium"
                 : "text-muted-foreground hover:text-foreground"
-            }`}
+              }`}
           >
             <Users className="w-4 h-4" />
             <span>Friends</span>
           </Link>
           <Link
             href="/achievements"
-            className={`flex items-center space-x-2 transition-colors ${
-              isActive("/achievements")
+            className={`flex items-center space-x-2 transition-colors ${isActive("/achievements")
                 ? "text-accent font-medium"
                 : "text-muted-foreground hover:text-foreground"
-            }`}
+              }`}
           >
             <Trophy className="w-4 h-4" />
             <span>Achievements</span>
+          </Link>
+          <Link
+            href="/profile"
+            className={`flex items-center space-x-2 transition-colors ${isActive("/profile")
+                ? "text-accent font-medium"
+                : "text-muted-foreground hover:text-foreground"
+              }`}
+          >
+            <User className="w-4 h-4" />
+            <span>Profile</span>
           </Link>
         </nav>
 
