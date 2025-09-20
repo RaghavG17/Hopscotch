@@ -12,11 +12,14 @@ export async function POST(request: NextRequest) {
 
         // Check if user exists in database
         let existingUser = dbService.getUserByFirebaseUid(firebaseUid);
+        let isNewUser = false;
 
         if (!existingUser) {
             // Create new user in database
             dbService.createUser(firebaseUid, email, displayName, photoURL);
             existingUser = dbService.getUserByFirebaseUid(firebaseUid);
+            //for questionnaire pop up
+            isNewUser = true;
         } else {
             // Update existing user info
             dbService.updateUser(firebaseUid, displayName, photoURL);
@@ -25,7 +28,8 @@ export async function POST(request: NextRequest) {
 
         return NextResponse.json({
             success: true,
-            user: existingUser
+            user: existingUser,
+            isNewUser,
         });
     } catch (error) {
         console.error('Error syncing user:', error);
