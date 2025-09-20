@@ -20,6 +20,7 @@ export function initializeDatabase() {
       email TEXT UNIQUE NOT NULL,
       display_name TEXT,
       photo_url TEXT,
+      has_completed_questionnaire BOOLEAN DEFAULT FALSE,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )
