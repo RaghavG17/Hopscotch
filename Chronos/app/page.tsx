@@ -33,7 +33,7 @@ export default function LandingPage() {
             <div className="w-8 h-8 bg-accent rounded-lg flex items-center justify-center">
               <Calendar className="w-5 h-5 text-accent-foreground" />
             </div>
-            <span className="text-xl font-bold text-foreground">LifeLine</span>
+            <span className="text-xl font-bold text-foreground">Chronos</span>
           </div>
           <nav className="hidden md:flex items-center space-x-6">
             <Link href="#features" className="text-muted-foreground hover:text-foreground transition-colors">
@@ -61,8 +61,12 @@ export default function LandingPage() {
       </header>
 
       {/* Hero Section */}
-      <section className="relative py-20 lg:py-32 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-accent/5 via-background to-secondary/5"></div>
+      <section
+        className="relative py-20 lg:py-32 overflow-hidden bg-center bg-cover"
+        style={{ backgroundImage: "url('/hero-background.jpg')" }}
+        aria-label="Hero background image"
+      >
+        <div className="absolute inset-0 bg-gradient-to-br from-accent/0 via-background/80 to-secondary/50 pointer-events-none" aria-hidden="true"></div>
         <div className="container mx-auto px-4 relative">
           <div className="max-w-4xl mx-auto text-center">
             <Badge variant="secondary" className="mb-6">
@@ -92,7 +96,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Interactive Timeline Preview */}
+      {/* Timeline Preview */}
       <section id="timeline" className="py-20 bg-muted/30">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
@@ -101,78 +105,10 @@ export default function LandingPage() {
               See how your milestones come together in a beautiful, scrollable timeline
             </p>
           </div>
+        </div>
 
           {/* Timeline Demo */}
-          <div className="relative max-w-6xl mx-auto">
-            <div className="flex items-center justify-between mb-4">
-              <Button variant="outline" size="sm">
-                <ChevronLeft className="w-4 h-4 mr-2" />
-                Previous
-              </Button>
-              <Button variant="outline" size="sm">
-                Next
-                <ChevronRight className="w-4 h-4 ml-2" />
-              </Button>
-            </div>
-
-            <div className="relative overflow-hidden rounded-lg border border-border bg-card p-6">
-              <div className="flex space-x-6 overflow-x-auto pb-4">
-                {/* Timeline Items */}
-                {[
-                  {
-                    title: "Started College",
-                    date: "Sep 2020",
-                    description: "Began Computer Science at State University",
-                    image: "/vibrant-college-campus.png",
-                  },
-                  {
-                    title: "First Internship",
-                    date: "Jun 2022",
-                    description: "Software Engineering Intern at TechCorp",
-                    image: "/modern-office-workspace.png",
-                  },
-                  {
-                    title: "Studied Abroad",
-                    date: "Jan 2023",
-                    description: "Semester in Tokyo, Japan",
-                    image: "/tokyo-skyline.png",
-                  },
-                  {
-                    title: "Graduation",
-                    date: "May 2024",
-                    description: "BS in Computer Science, Magna Cum Laude",
-                    image: "/graduation-ceremony.png",
-                  },
-                ].map((milestone, index) => (
-                  <div key={index} className="flex-shrink-0 w-80">
-                    <Card className="h-full hover:shadow-lg transition-shadow">
-                      <CardHeader className="pb-3">
-                        <div className="flex items-center justify-between">
-                          <Badge variant="outline">{milestone.date}</Badge>
-                          <Camera className="w-4 h-4 text-muted-foreground" />
-                        </div>
-                        <CardTitle className="text-lg">{milestone.title}</CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <img
-                          src={milestone.image || "/placeholder.svg"}
-                          alt={milestone.title}
-                          className="w-full h-32 object-cover rounded-md mb-3"
-                        />
-                        <CardDescription className="text-sm">{milestone.description}</CardDescription>
-                        <div className="mt-3 flex flex-wrap gap-1">
-                          <Badge variant="secondary" className="text-xs">
-                            Goal: Land Full-time Role
-                          </Badge>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
+          <p className="text-center">replace with a screenshot of our timeline</p>
       </section>
 
       {/* Features Section */}
@@ -248,19 +184,19 @@ export default function LandingPage() {
                 name: "Sarah Chen",
                 goal: "Software Engineering Career",
                 milestone: "Just landed my dream job at Google!",
-                avatar: "/professional-woman-smiling.png",
+                avatar: "/sarah-chen.jpg",
               },
               {
                 name: "Marcus Johnson",
                 goal: "Study Abroad Experience",
                 milestone: "Completed semester in Barcelona - life changing!",
-                avatar: "/young-man-smiling.png",
+                avatar: "/marcus-johnson.jpg",
               },
               {
                 name: "Emily Rodriguez",
                 goal: "Graduate School",
                 milestone: "Accepted to MIT for my Master's degree!",
-                avatar: "/graduate-student-smiling.jpg",
+                avatar: "/emily-rodriguez.jpg",
               },
             ].map((person, index) => (
               <Card key={index} className="text-center">
@@ -268,7 +204,7 @@ export default function LandingPage() {
                   <img
                     src={person.avatar || "/placeholder.svg"}
                     alt={person.name}
-                    className="w-16 h-16 rounded-full mx-auto mb-4"
+                    className="w-16 h-16 rounded-full mx-auto mb-4 object-cover"
                   />
                   <CardTitle className="text-lg">{person.name}</CardTitle>
                   <Badge variant="secondary" className="mx-auto">
@@ -300,7 +236,7 @@ export default function LandingPage() {
           <h2 className="text-3xl md:text-4xl font-bold mb-4">Ready to Start Your Journey?</h2>
           <p className="text-xl mb-8 text-accent-foreground/90 max-w-2xl mx-auto">
             Join thousands of users who are already documenting their milestones and achieving their goals with
-            LifeLine.
+            Chronos.
           </p>
           <Button
             size="lg"
@@ -326,7 +262,7 @@ export default function LandingPage() {
                 <div className="w-8 h-8 bg-accent rounded-lg flex items-center justify-center">
                   <Calendar className="w-5 h-5 text-accent-foreground" />
                 </div>
-                <span className="text-xl font-bold">LifeLine</span>
+                <span className="text-xl font-bold">Chronos</span>
               </div>
               <p className="text-muted-foreground text-sm">
                 Document your journey, achieve your goals, and connect with your community.
@@ -404,7 +340,7 @@ export default function LandingPage() {
             </div>
           </div>
           <div className="border-t border-border mt-8 pt-8 text-center text-sm text-muted-foreground">
-            <p>&copy; 2024 LifeLine. All rights reserved.</p>
+            <p>&copy; 2025 Chronos. All rights reserved.</p>
           </div>
         </div>
       </footer>
