@@ -5,31 +5,45 @@
 
 :root {
   /* Updated color palette for life timeline app branding */
-  --background: oklch(1 0 0); /* Pure white background */
-  --foreground: oklch(0.205 0 0); /* Dark gray-800 equivalent for text */
-  --card: oklch(0.97 0.005 240); /* Light gray-50 equivalent for cards */
-  --card-foreground: oklch(0.205 0 0); /* Dark text on cards */
+  --background: oklch(1 0 0);
+  /* Pure white background */
+  --foreground: oklch(0.205 0 0);
+  /* Dark gray-800 equivalent for text */
+  --card: oklch(0.97 0.005 240);
+  /* Light gray-50 equivalent for cards */
+  --card-foreground: oklch(0.205 0 0);
+  /* Dark text on cards */
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.205 0 0);
-  --primary: oklch(0.205 0 0); /* Dark gray-800 for primary buttons */
-  --primary-foreground: oklch(1 0 0); /* White text on primary */
-  --secondary: oklch(0.646 0.162 293.89); /* Purple-500 equivalent for accents */
-  --secondary-foreground: oklch(1 0 0); /* White text on secondary */
-  --muted: oklch(0.97 0.005 240); /* Light muted background */
-  --muted-foreground: oklch(0.556 0.016 252.89); /* Gray-500 equivalent */
-  --accent: oklch(0.646 0.162 293.89); /* Purple accent color */
+  --primary: oklch(0.205 0 0);
+  /* Dark gray-800 for primary buttons */
+  --primary-foreground: oklch(1 0 0);
+  /* White text on primary */
+  --secondary: oklch(0.646 0.162 293.89);
+  /* Purple-500 equivalent for accents */
+  --secondary-foreground: oklch(1 0 0);
+  /* White text on secondary */
+  --muted: oklch(0.97 0.005 240);
+  /* Light muted background */
+  --muted-foreground: oklch(0.556 0.016 252.89);
+  /* Gray-500 equivalent */
+  --accent: oklch(0.646 0.162 293.89);
+  /* Purple accent color */
   --accent-foreground: oklch(1 0 0);
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(1 0 0);
-  --border: oklch(0.922 0.013 252.89); /* Light gray border */
+  --border: oklch(0.922 0.013 252.89);
+  /* Light gray border */
   --input: oklch(1 0 0);
-  --ring: oklch(0.646 0.162 293.89); /* Purple focus ring */
+  --ring: oklch(0.646 0.162 293.89);
+  /* Purple focus ring */
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.08);
-  --radius: 0.5rem; /* Slightly smaller radius for modern look */
+  --radius: 0.5rem;
+  /* Slightly smaller radius for modern look */
   --sidebar: oklch(1 0 0);
   --sidebar-foreground: oklch(0.205 0 0);
   --sidebar-primary: oklch(0.646 0.162 293.89);
@@ -118,9 +132,10 @@
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-gray-200;
   }
+
   body {
-    @apply bg-background text-foreground;
+    @apply bg-white text-gray-900;
   }
 }
