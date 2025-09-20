@@ -1,1 +1,4 @@
+# Database files
 Chronos/data/chronos.db
+Chronos/data/*.db
+*.db
