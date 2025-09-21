@@ -38,27 +38,18 @@ Chronos uses a centralized API key management system that ensures seamless integ
    npm install
    ```
 
-3. **Set up environment variables**
+3. **Set up environment variables (AUTOMATIC)**
    ```bash
-   cp .env.example .env.local
+   npm run setup
    ```
+   This automatically creates `.env.local` with all the shared API keys!
 
-4. **Configure API keys in `.env.local`**
-   ```bash
-   # Required API Keys (shared for team use)
-   GROQ_API_KEY=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
-   GOOGLE_CLIENT_ID=test_google_client_id
-   GOOGLE_CLIENT_SECRET=test_google_client_secret
-   
-   # Optional: Custom Firebase project (defaults provided)
-   FIREBASE_API_KEY=your_firebase_api_key_here
-   # ... other Firebase keys
-   ```
-
-5. **Start the development server**
+4. **Start the development server**
    ```bash
    npm run dev
    ```
+
+**That's it!** No manual configuration needed - all API keys are pre-configured for team use.
 
 ## 🏗️ Architecture Overview
 
