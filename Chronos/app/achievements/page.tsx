@@ -225,10 +225,6 @@ export default function AchievementsPage() {
                 {filteredAchievements.map((achievement) => (
                   <Card
                     key={achievement.id}
-                    className={`relative overflow-hidden transition-all duration-300 ${achievement.isUnlocked
-                      ? "hover:shadow-lg border-accent/20"
-                      : "opacity-75 hover:opacity-90"
-                      }`}
                     className={`relative overflow-hidden transition-all duration-300 ${
                       achievement.isUnlocked
                         ? "hover:shadow-lg border-accent/20 bg-gradient-to-br from-background to-accent/5"
@@ -249,13 +245,6 @@ export default function AchievementsPage() {
 
                     <CardHeader className="pb-4">
                       <div className="flex items-center justify-between">
-                        <div
-                          className={`p-3 rounded-lg ${achievement.isUnlocked
-                            ? "bg-accent/10 text-accent"
-                            : "bg-muted text-muted-foreground"
-                            }`}
-                        >
-
                         <div className="p-3 rounded-lg shadow-sm bg-background/50 relative">
                           {achievement.icon}
                           <div className="hidden">

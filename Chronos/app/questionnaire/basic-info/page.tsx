@@ -79,7 +79,6 @@ export default function BasicInfoPage() {
         const requiredFields = [
             answers.name.trim(),
             answers.age.trim(),
-            answers.journeyStage.trim() || answers.journeyStageOther.trim(),
             answers.occupation.trim(),
             answers.location.trim(),
             answers.graduation.trim(),

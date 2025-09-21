@@ -12,7 +12,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Calendar, Users, Trophy, User, Settings, LogOut } from "lucide-react";
-import { Calendar, Users, Trophy, User } from "lucide-react";
 
 export function Navbar() {
   const pathname = usePathname();

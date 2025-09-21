@@ -1,5 +1,4 @@
 "use client";
-import { Navbar } from "@/components/ui/navbar";
 import Image from "next/image";
 import {
   MapPin,
@@ -9,6 +8,7 @@ import {
   Heart,
   Mail,
 } from "lucide-react";
+import { Navbar } from "@/components/ui/navbar";
 
 const ProfilePage = () => {
   const user = {
@@ -27,14 +27,6 @@ const ProfilePage = () => {
       friends: 128,
       achievements: 23,
     },
-import React, { useState } from "react";
-
-const ProfilePage = () => {
-//temp data rn, replac eonce raghav makes sqlite live
-    const user = {
-    username: "tempsarah",
-    bio: "dubai matcha 67 labubu",
-    profilePic: "/emily-rodriguez.jpg", 
   };
 
   return (
@@ -154,8 +146,6 @@ const ProfilePage = () => {
           </div>
         </div>
       </div>
-    </div>
-    
     </div>
   );
 };

@@ -846,6 +846,8 @@ export default function TimelinePage() {
       <AuthModal
         isOpen={isAuthModalOpen}
         onClose={() => setIsAuthModalOpen(false)}
+      />
+
       {/* Calendar Modal for Monthly Milestones */}
       <CalendarModal 
         isOpen={isCalendarOpen} 
