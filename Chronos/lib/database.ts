@@ -124,6 +124,32 @@ export function initializeDatabase() {
     )
   `);
 
+  // Questionnaire data table
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS questionnaire_data (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      user_id INTEGER NOT NULL,
+      name TEXT,
+      age TEXT,
+      graduation TEXT,
+      school_name TEXT,
+      graduation_year TEXT,
+      first_job TEXT,
+      promotion TEXT,
+      retirement TEXT,
+      relationship_status TEXT,
+      family_status TEXT,
+      moved_out TEXT,
+      hobbies TEXT,
+      interests TEXT,
+      location TEXT,
+      occupation TEXT,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+    )
+  `);
+
   // Reports table for AI-generated user reports
   db.exec(`
     CREATE TABLE IF NOT EXISTS reports (
@@ -257,6 +283,49 @@ export const dbService = {
   updateGoalStatus: (goalId: number, status: string) => {
     const stmt = db.prepare('UPDATE goals SET status = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?');
     return stmt.run(status, goalId);
+  },
+
+  // Questionnaire data operations
+  saveQuestionnaireData: (userId: number, data: any) => {
+    const stmt = db.prepare(`
+      INSERT OR REPLACE INTO questionnaire_data (
+        user_id, name, age, graduation, school_name, graduation_year,
+        first_job, promotion, retirement, relationship_status, family_status,
+        moved_out, hobbies, interests, location, occupation
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `);
+    return stmt.run(
+      userId,
+      data.name,
+      data.age,
+      data.graduation,
+      data.schoolName,
+      data.graduationYear,
+      data.firstJob,
+      data.promotion,
+      data.retirement,
+      data.relationshipStatus,
+      data.familyStatus,
+      data.movedOut,
+      data.hobbies,
+      data.interests,
+      data.location,
+      data.occupation
+    );
+  },
+
+  getQuestionnaireDataByUserId: (userId: number) => {
+    const stmt = db.prepare('SELECT * FROM questionnaire_data WHERE user_id = ?');
+    return stmt.get(userId);
+  },
+
+  updateUserQuestionnaireStatus: (firebaseUid: string, completed: boolean) => {
+    const stmt = db.prepare(`
+      UPDATE users 
+      SET has_completed_questionnaire = ?, updated_at = CURRENT_TIMESTAMP
+      WHERE firebase_uid = ?
+    `);
+    return stmt.run(completed ? 1 : 0, firebaseUid);
   },
 
   // Report operations
