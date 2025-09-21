@@ -48,6 +48,7 @@
     "embla-carousel-react": "8.5.1",
     "firebase": "^12.3.0",
     "geist": "^1.5.1",
+    "grok-sdk": "^0.0.1-security",
     "groq-sdk": "^0.32.0",
     "googleapis": "^160.0.0",
     "input-otp": "1.4.1",

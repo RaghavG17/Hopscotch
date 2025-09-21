@@ -15,6 +15,8 @@ import { Navbar } from "@/components/ui/navbar"
 import { AuthModal } from "@/components/auth/auth-modal"
 import { SimpleUserMenu } from "@/components/auth/simple-user-menu"
 import { useAuth } from "@/lib/auth-context"
+import {useUserProgress } from "@/context/UserProgressContext";
+import { CalendarModal } from "@/components/calendar"
 
 interface Milestone {
   id: string
@@ -52,6 +54,8 @@ export default function TimelinePage() {
   const [aiReport, setAiReport] = useState<{ content: string; generatedAt: string } | null>(null)
   const [isGenerating, setIsGenerating] = useState(false)
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false)
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false)
+  const [selectedMilestone, setSelectedMilestone] = useState<Milestone | null>(null)
 
   // Check for AI-generated report on component mount
   useEffect(() => {
@@ -165,7 +169,6 @@ export default function TimelinePage() {
     }),
   ])
 
-  const [selectedMilestone, setSelectedMilestone] = useState<Milestone | null>(null)
   const [isEditing, setIsEditing] = useState(false)
   const [editForm, setEditForm] = useState<Milestone | null>(null)
 
@@ -546,31 +549,60 @@ export default function TimelinePage() {
                         </h3>
 
                         {/* Milestone Card */}
-                        <Dialog>
-                          <DialogTrigger asChild>
-                            <Card className="w-44 h-44 cursor-pointer hover:shadow-2xl transition-all duration-300 group relative overflow-hidden border-2 border-border hover:border-accent">
-                              <div
-                                className="absolute inset-0 bg-cover bg-center"
-                                style={{
-                                  backgroundImage: milestone.image ? `url(${milestone.image})` : "none",
-                                  backgroundColor: milestone.image ? "transparent" : "#f1f5f9",
-                                }}
-                              >
-                                <div className="absolute inset-0 bg-black/40 group-hover:bg-black/30 transition-colors"></div>
-                              </div>
-                              <CardContent className="relative z-10 p-4 h-full flex flex-col justify-between text-white">
-                                <div>
-                                  <h4 className="text-sm font-medium mb-2">{milestone.title}</h4>
-                                  <p className="text-xs opacity-90 line-clamp-3">{milestone.description}</p>
+                        {viewMode === "yearly" ? (
+                          <Dialog>
+                            <DialogTrigger asChild>
+                              <Card className="w-44 h-44 cursor-pointer hover:shadow-2xl transition-all duration-300 group relative overflow-hidden border-2 border-border hover:border-accent">
+                                <div
+                                  className="absolute inset-0 bg-cover bg-center"
+                                  style={{
+                                    backgroundImage: milestone.image ? `url(${milestone.image})` : "none",
+                                    backgroundColor: milestone.image ? "transparent" : "#f1f5f9",
+                                  }}
+                                >
+                                  <div className="absolute inset-0 bg-black/40 group-hover:bg-black/30 transition-colors"></div>
                                 </div>
-                                <Badge variant="secondary" className="self-start text-xs">
-                                  {milestone.shortTermGoals.length + milestone.longTermGoals.length} goals
-                                </Badge>
-                              </CardContent>
-                            </Card>
-                          </DialogTrigger>
-                          <MilestoneModal milestone={milestone} onEdit={() => handleEditMilestone(milestone)} />
-                        </Dialog>
+                                <CardContent className="relative z-10 p-4 h-full flex flex-col justify-between text-white">
+                                  <div>
+                                    <h4 className="text-sm font-medium mb-2">{milestone.title}</h4>
+                                    <p className="text-xs opacity-90 line-clamp-3">{milestone.description}</p>
+                                  </div>
+                                  <Badge variant="secondary" className="self-start text-xs">
+                                    {milestone.shortTermGoals.length + milestone.longTermGoals.length} goals
+                                  </Badge>
+                                </CardContent>
+                              </Card>
+                            </DialogTrigger>
+                            <MilestoneModal milestone={milestone} onEdit={() => handleEditMilestone(milestone)} />
+                          </Dialog>
+                        ) : (
+                          <Card 
+                            className="w-44 h-44 cursor-pointer hover:shadow-2xl transition-all duration-300 group relative overflow-hidden border-2 border-border hover:border-accent"
+                            onClick={() => {
+                              setSelectedMilestone(milestone)
+                              setIsCalendarOpen(true)
+                            }}
+                          >
+                            <div
+                              className="absolute inset-0 bg-cover bg-center"
+                              style={{
+                                backgroundImage: milestone.image ? `url(${milestone.image})` : "none",
+                                backgroundColor: milestone.image ? "transparent" : "#f1f5f9",
+                              }}
+                            >
+                              <div className="absolute inset-0 bg-black/40 group-hover:bg-black/30 transition-colors"></div>
+                            </div>
+                            <CardContent className="relative z-10 p-4 h-full flex flex-col justify-between text-white">
+                              <div>
+                                <h4 className="text-sm font-medium mb-2">{milestone.title}</h4>
+                                <p className="text-xs opacity-90 line-clamp-3">{milestone.description}</p>
+                              </div>
+                              <Badge variant="secondary" className="self-start text-xs">
+                                {milestone.shortTermGoals.length + milestone.longTermGoals.length} goals
+                              </Badge>
+                            </CardContent>
+                          </Card>
+                        )}
 
                         {/* Connecting Line */}
                         <div
@@ -814,6 +846,10 @@ export default function TimelinePage() {
       <AuthModal
         isOpen={isAuthModalOpen}
         onClose={() => setIsAuthModalOpen(false)}
+      {/* Calendar Modal for Monthly Milestones */}
+      <CalendarModal 
+        isOpen={isCalendarOpen} 
+        onClose={() => setIsCalendarOpen(false)} 
       />
     </div>
   )
@@ -821,6 +857,8 @@ export default function TimelinePage() {
 
 // MilestoneModal component
 function MilestoneModal({ milestone, onEdit }: { milestone: Milestone; onEdit: () => void }) {
+  const { completedTasks, toggleTask } = useUserProgress()
+  
   return (
     <DialogContent className="max-w-3xl p-10">
       <DialogHeader>
@@ -846,11 +884,23 @@ function MilestoneModal({ milestone, onEdit }: { milestone: Milestone; onEdit: (
               <span>Short Term Goals</span>
             </h4>
             <div className="space-y-2">
-              {milestone.shortTermGoals.map((goal, index) => (
-                <Badge key={index} variant="secondary" className="mr-2 mb-2 text-sm px-3 py-1">
-                  {goal}
-                </Badge>
-              ))}
+              {milestone.shortTermGoals.map((goal, index) => {
+                const taskId = `${milestone.id}-short-${index}`
+
+                return (
+                  <div key={taskId} className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      checked={!!completedTasks[taskId]}
+                      onChange={() => toggleTask(taskId, goal)} // Pass the goal title
+                      className="w-4 h-4 accent-accent"
+                    />
+                    <span className={completedTasks[taskId] ? "line-through text-gray-400" : ""}>
+                      {goal}
+                    </span>
+                  </div>
+                )
+              })}
             </div>
           </div>
 
@@ -860,11 +910,24 @@ function MilestoneModal({ milestone, onEdit }: { milestone: Milestone; onEdit: (
               <span>Long Term Goals</span>
             </h4>
             <div className="space-y-2">
-              {milestone.longTermGoals.map((goal, index) => (
-                <Badge key={index} variant="outline" className="mr-2 mb-2 text-sm px-3 py-1">
-                  {goal}
-                </Badge>
-              ))}
+              {/* Fixed: Now mapping over longTermGoals instead of shortTermGoals */}
+              {milestone.longTermGoals.map((goal, index) => {
+                const taskId = `${milestone.id}-long-${index}`
+
+                return (
+                  <div key={taskId} className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      checked={!!completedTasks[taskId]}
+                      onChange={() => toggleTask(taskId, goal)}
+                      className="w-4 h-4 accent-accent"
+                    />
+                    <span className={completedTasks[taskId] ? "line-through text-gray-400" : ""}>
+                      {goal}
+                    </span>
+                  </div>
+                )
+              })}
             </div>
           </div>
         </div>

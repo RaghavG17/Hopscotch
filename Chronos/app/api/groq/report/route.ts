@@ -50,11 +50,16 @@ interface QuestionnaireData {
 
 export async function POST(request: NextRequest) {
   try {
-    const { userId, questionnaireData }: { userId: string; questionnaireData: QuestionnaireData } = await request.json();
+    const { userId, questionnaireData }: { userId: number; questionnaireData: QuestionnaireData } = await request.json();
+
+    console.log('Groq API received userId:', userId, 'type:', typeof userId);
 
     if (!userId || !questionnaireData) {
       return NextResponse.json({ error: 'User ID and questionnaire data are required' }, { status: 400 });
     }
+
+    // Check if user exists in database by checking if we can create a report
+    // (We'll let the database constraint handle the validation)
 
     // Create a structured timeline prompt for the AI
     const prompt = `
@@ -248,7 +253,7 @@ For each goal area (Personal, Professional, Social):
     }
 
     // Save the report to the database
-    const result = dbService.createReport(parseInt(userId), 'questionnaire_analysis', reportContent);
+    const result = dbService.createReport(userId, 'questionnaire_analysis', reportContent);
 
     return NextResponse.json({
       success: true,
