@@ -5,7 +5,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { AuthModal } from "@/components/auth/auth-modal"
 import { SimpleUserMenu } from "@/components/auth/simple-user-menu"
-import { SharedNavbar } from "@/components/ui/shared-navbar"
 import { useAuth } from "@/lib/auth-context"
 import { ArrowRight, Calendar, Users, Target, Heart, MessageCircle } from "lucide-react"
 import Link from "next/link"
@@ -72,11 +71,21 @@ export default function LandingPage() {
       {/* Hero Section */}
       <section
         className="relative py-24 lg:py-40 overflow-hidden bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: "url('/gradient.png')" }}
+        style={{
+          backgroundImage: "url('/gradient.png'), url('/background.jpg')",
+          backgroundBlendMode: "overlay",
+        }}
         aria-label="Hero background image"
       >
         <div
           className="absolute inset-0 bg-gradient-to-br from-background/40 via-accent/5 to-background/30"
+          aria-hidden="true"
+        ></div>
+
+        {/* Gradient overlay for opacity control */}
+        <div
+          className="absolute inset-0 opacity-30 bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: "url('/gradient.png')" }}
           aria-hidden="true"
         ></div>
 
@@ -108,25 +117,36 @@ export default function LandingPage() {
               <div className="absolute -bottom-5 left-1/2 transform -translate-x-1/2 w-24 h-px bg-gradient-to-r from-transparent via-accent/30 to-transparent opacity-40 blur-sm"></div>
 
               <h1 className="text-5xl md:text-7xl font-bold mb-0 text-balance leading-tight relative">
-                <span className="bg-gradient-to-r from-foreground via-foreground/90 to-foreground bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-foreground via-foreground/90 to-foreground bg-clip-text text-transparent font-medium">
                   Turn Your Life Into a
                 </span>
                 <br />
-                <span className="bg-gradient-to-r from-foreground/95 via-accent to-foreground/95 bg-clip-text text-transparent relative">
-                  Visual Story
-                  {/* Multiple blur layers for enhanced glow effect */}
-                  <span className="absolute inset-0 bg-gradient-to-r from-foreground/95 via-accent to-foreground/95 bg-clip-text text-transparent blur-2xl opacity-15 -z-10">
+                <span className="bg-gradient-to-r from-foreground via-foreground/90 to-foreground bg-clip-text text-transparent font-black relative">
+                <span
+                    className="absolute inset-0 bg-gradient-to-r from-foreground via-foreground/90 to-foreground bg-clip-text opacity-60"
+                    aria-hidden="true"
+                  >
                     Visual Story
                   </span>
-                  <span className="absolute inset-0 bg-gradient-to-r from-foreground/95 via-accent to-foreground/95 bg-clip-text text-transparent blur-xl opacity-25 -z-10">
+                  <span
+                    className="absolute inset-0 bg-gradient-to-r from-foreground via-foreground/90 to-foreground bg-clip-text opacity-60"
+                    aria-hidden="true"
+                  >
                     Visual Story
                   </span>
-                  <span className="absolute inset-0 bg-gradient-to-r from-foreground/95 via-accent to-foreground/95 bg-clip-text text-transparent blur-lg opacity-35 -z-10">
+                  <span
+                    className="absolute inset-0 bg-gradient-to-r from-accent via-accent/80 to-accent bg-clip-text text-transparent blur-md opacity-40"
+                    aria-hidden="true"
+                  >
                     Visual Story
                   </span>
-                  <span className="absolute inset-0 bg-gradient-to-r from-foreground/95 via-accent to-foreground/95 bg-clip-text text-transparent blur-md opacity-40 -z-10">
+                  <span
+                    className="absolute inset-0 bg-gradient-to-r from-accent via-accent/60 to-accent bg-clip-text text-transparent blur-lg opacity-20"
+                    aria-hidden="true"
+                  >
                     Visual Story
                   </span>
+                  <span className="relative z-10">Visual Story</span>
                 </span>
               </h1>
             </div>
