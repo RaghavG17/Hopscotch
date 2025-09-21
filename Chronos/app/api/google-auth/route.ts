@@ -6,20 +6,26 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const action = searchParams.get('action');
 
+    console.log('Google Auth API called with action:', action);
+
     const googleCalendarService = new GoogleCalendarService();
 
     switch (action) {
       case 'auth-url':
         const authUrl = googleCalendarService.getAuthUrl();
+        console.log('Generated auth URL:', authUrl);
         return NextResponse.json({ authUrl });
 
       case 'callback':
         const code = searchParams.get('code');
+        console.log('Callback received with code:', code);
         if (!code) {
           return NextResponse.json({ error: 'Authorization code required' }, { status: 400 });
         }
 
+        console.log('Exchanging code for tokens...');
         const tokens = await googleCalendarService.getTokens(code);
+        console.log('Tokens received:', tokens);
         return NextResponse.json({ tokens });
 
       default:
