@@ -29,6 +29,75 @@ interface Milestone {
   completed?: boolean
 }
 
+//set up randomizing for cherry blosom png
+function CherryBlossom({ 
+  x, 
+  y, 
+  rotation, 
+  scale = 1,
+  opacity = 1,
+  imageSrc 
+}: { 
+  x: number; 
+  y: number; 
+  rotation: number; 
+  scale?: number;
+  opacity?: number;
+  imageSrc: string;
+}) {
+  return (
+    <div
+      className="absolute pointer-events-none z-10"
+      style={{
+        left: `${x}px`,
+        top: `${y}px`,
+        transform: `translate(-50%, -50%) rotate(${rotation}deg) scale(${scale})`,
+        opacity: opacity,
+      }}
+    >
+      <img 
+        src={imageSrc} 
+        alt="Cherry Blossom" 
+        className="w-8 h-8 object-contain"
+        style={{
+          backgroundColor: 'transparent',
+          mixBlendMode: 'normal'
+        }}
+      />
+    </div>
+  )
+}
+
+//gen random position specifcslly around milestone card
+//tbh avoidtoo far scattering
+function generateCherryBlossomPositions(
+  milestoneIndex: number, 
+  taskCount: number, 
+  isTopPosition: boolean
+): Array<{ x: number; y: number; rotation: number; scale: number; opacity: number }> {
+  const positions = []
+  
+  //base position
+  const baseX = milestoneIndex * 128 * 4 + 176 //lowkey i cant find he center so rabdin numbers r fnine
+  const baseY = isTopPosition ? 150 : 350 //same w  vertical center
+  
+  for (let i = 0; i < taskCount; i++) {
+    //gen radndom offset
+    const offsetRadius = 60 + Math.random() * 42
+    const angle = Math.random() * 2 * Math.PI
+    
+    const x = baseX + Math.cos(angle) * offsetRadius
+    const y = baseY + Math.sin(angle) * offsetRadius
+    const rotation = Math.random() * 360
+    const scale = 3 + Math.random() * 3 
+    const opacity = 1 //keep 1 opacity bc transparant image alr
+    
+    positions.push({ x, y, rotation, scale, opacity })
+  }
+  
+  return positions
+}
+
 export default function TimelinePage() {
   const { currentUser } = useAuth()
   const currentYear = new Date().getFullYear()
@@ -53,6 +122,8 @@ export default function TimelinePage() {
   const [isGenerating, setIsGenerating] = useState(false)
   const [isCalendarOpen, setIsCalendarOpen] = useState(false)
   const [selectedMilestone, setSelectedMilestone] = useState<Milestone | null>(null)
+  
+  const cherryBlossomImage = "/blossom.png"
 
   // Check for AI-generated report on component mount
   useEffect(() => {
@@ -411,6 +482,12 @@ export default function TimelinePage() {
     }
   }, [aiReport])
 
+  //generate cherry blossom positions for each milestone
+  const cherryBlossomData = currentMilestones.map((milestone, index) => {
+    const taskCount = milestone.shortTermGoals.length + milestone.longTermGoals.length
+    const isTopPosition = milestone.position === "top"
+    return generateCherryBlossomPositions(index, taskCount, isTopPosition)
+  }).flat()
 
   return (
     <div className="min-h-screen bg-background">
@@ -498,6 +575,19 @@ export default function TimelinePage() {
           <div className="relative">
             <div className="overflow-x-auto pb-8">
               <div className="relative min-w-max px-12">
+                {/* Cherry Blossoms - Render all positions */}
+                {cherryBlossomData.map((blossom, index) => (
+                  <CherryBlossom
+                    key={index}
+                    x={blossom.x}
+                    y={blossom.y}
+                    rotation={blossom.rotation}
+                    scale={blossom.scale}
+                    opacity={blossom.opacity}
+                    imageSrc={cherryBlossomImage}
+                  />
+                ))}
+                
                 {/* Horizontal Timeline Line */}
                 <div className="absolute top-1/2 left-0 right-0 h-2 bg-accent/30 rounded-full transform -translate-y-1/2 z-0"></div>
 
