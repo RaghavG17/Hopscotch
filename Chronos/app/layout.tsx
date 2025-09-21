@@ -3,6 +3,7 @@ import { GeistSans } from 'geist/font/sans'
 import { GeistMono } from 'geist/font/mono'
 import { AuthProvider } from '@/lib/auth-context'
 import { UserProgressProvider } from '@/context/UserProgressContext'
+import { ConfigInitializer } from '@/components/config-initializer'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -19,9 +20,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable}`}>
+        <ConfigInitializer />
         <AuthProvider>
           <UserProgressProvider>
-              {children}
+            {children}
           </UserProgressProvider>
         </AuthProvider>
       </body>
