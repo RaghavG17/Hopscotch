@@ -1,10 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { google } from 'googleapis';
-import { auth } from '@/lib/firebase';
-import { getAuth } from 'firebase-admin/auth';
-
-// Initialize Firebase Admin (you'll need to set this up)
-// For now, we'll use a different approach with client-side auth
+import { googleConfig } from '@/lib/config';
 
 export async function GET(request: NextRequest) {
   try {
@@ -18,9 +14,9 @@ export async function GET(request: NextRequest) {
 
     // Create OAuth2 client
     const oauth2Client = new google.auth.OAuth2(
-      process.env.GOOGLE_CLIENT_ID,
-      process.env.GOOGLE_CLIENT_SECRET,
-      process.env.GOOGLE_REDIRECT_URI
+      googleConfig.clientId,
+      googleConfig.clientSecret,
+      googleConfig.redirectUri
     );
 
     oauth2Client.setCredentials({
@@ -33,7 +29,7 @@ export async function GET(request: NextRequest) {
       case 'list-events':
         const timeMin = searchParams.get('timeMin');
         const timeMax = searchParams.get('timeMax');
-        
+
         const eventsResponse = await calendar.events.list({
           calendarId: 'primary',
           timeMin: timeMin || new Date().toISOString(),
@@ -56,7 +52,7 @@ export async function GET(request: NextRequest) {
 
       case 'create-event':
         const eventData = await request.json();
-        
+
         const event = {
           summary: eventData.title,
           description: eventData.description,
@@ -101,9 +97,9 @@ export async function POST(request: NextRequest) {
 
     // Create OAuth2 client
     const oauth2Client = new google.auth.OAuth2(
-      process.env.GOOGLE_CLIENT_ID,
-      process.env.GOOGLE_CLIENT_SECRET,
-      process.env.GOOGLE_REDIRECT_URI
+      googleConfig.clientId,
+      googleConfig.clientSecret,
+      googleConfig.redirectUri
     );
 
     oauth2Client.setCredentials({
