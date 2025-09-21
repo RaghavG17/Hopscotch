@@ -67,8 +67,17 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'User ID and questionnaire data are required' }, { status: 400 });
     }
 
-    // Check if user exists in database by checking if we can create a report
-    // (We'll let the database constraint handle the validation)
+    // Check if user exists in database, create if not
+    let user = dbService.getUserByFirebaseUid(userId.toString());
+    if (!user) {
+      // Create a temporary user for testing purposes
+      const result = dbService.createUser(
+        userId.toString(),
+        `test-user-${userId}@example.com`,
+        `Test User ${userId}`
+      );
+      user = { id: result.lastInsertRowid };
+    }
 
     // Create a structured timeline prompt for the AI
     const prompt = `
@@ -262,7 +271,7 @@ For each goal area (Personal, Professional, Social):
     }
 
     // Save the report to the database
-    const result = dbService.createReport(userId, 'questionnaire_analysis', reportContent);
+    const result = dbService.createReport(user.id, 'questionnaire_analysis', reportContent);
 
     return NextResponse.json({
       success: true,
