@@ -1,14 +1,10 @@
 "use client";
 import { Navbar } from "@/components/ui/navbar";
 import Image from "next/image";
-import { CalendarModal } from "@/components/calendar";
 import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
 
 const ProfilePage = () => {
 //temp data rn, replac eonce raghav makes sqlite live
-  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
-
     const user = {
     username: "tempsarah",
     bio: "dubai matcha 67 labubu",
