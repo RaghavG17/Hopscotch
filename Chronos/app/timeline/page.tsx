@@ -4,16 +4,30 @@ import type React from "react"
 
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
-import { Plus, Sparkles, Target, Clock, Edit3, Save, X, ChevronDown, ChevronUp, Trophy, Calendar, Edit, Check } from "lucide-react"
+import {
+  Plus,
+  Sparkles,
+  Target,
+  Clock,
+  Edit3,
+  Save,
+  X,
+  ChevronDown,
+  ChevronUp,
+  Trophy,
+  Calendar,
+  Upload,
+  ImageIcon,
+} from "lucide-react"
 import { AppNavbar } from "@/components/ui/app-navbar"
 import { useAuth } from "@/lib/auth-context"
-import { useUserProgress } from "@/context/UserProgressContext";
+import { useUserProgress } from "@/context/UserProgressContext"
 import { CalendarModal } from "@/components/calendar"
 
 interface Milestone {
@@ -30,20 +44,20 @@ interface Milestone {
 }
 
 //set up randomizing for cherry blosom png
-function CherryBlossom({ 
-  x, 
-  y, 
-  rotation, 
+function CherryBlossom({
+  x,
+  y,
+  rotation,
   scale = 1,
   opacity = 1,
-  imageSrc 
-}: { 
-  x: number; 
-  y: number; 
-  rotation: number; 
-  scale?: number;
-  opacity?: number;
-  imageSrc: string;
+  imageSrc,
+}: {
+  x: number
+  y: number
+  rotation: number
+  scale?: number
+  opacity?: number
+  imageSrc: string
 }) {
   return (
     <div
@@ -55,13 +69,13 @@ function CherryBlossom({
         opacity: opacity,
       }}
     >
-      <img 
-        src={imageSrc} 
-        alt="Cherry Blossom" 
+      <img
+        src={imageSrc || "/placeholder.svg"}
+        alt="Cherry Blossom"
         className="w-8 h-8 object-contain"
         style={{
-          backgroundColor: 'transparent',
-          mixBlendMode: 'normal'
+          backgroundColor: "transparent",
+          mixBlendMode: "normal",
         }}
       />
     </div>
@@ -71,30 +85,30 @@ function CherryBlossom({
 //gen random position specifcslly around milestone card
 //tbh avoidtoo far scattering
 function generateCherryBlossomPositions(
-  milestoneIndex: number, 
-  taskCount: number, 
-  isTopPosition: boolean
+  milestoneIndex: number,
+  taskCount: number,
+  isTopPosition: boolean,
 ): Array<{ x: number; y: number; rotation: number; scale: number; opacity: number }> {
   const positions = []
-  
+
   //base position
   const baseX = milestoneIndex * 128 * 4 + 176 //lowkey i cant find he center so rabdin numbers r fnine
   const baseY = isTopPosition ? 150 : 350 //same w  vertical center
-  
+
   for (let i = 0; i < taskCount; i++) {
     //gen radndom offset
     const offsetRadius = 60 + Math.random() * 42
     const angle = Math.random() * 2 * Math.PI
-    
+
     const x = baseX + Math.cos(angle) * offsetRadius
     const y = baseY + Math.sin(angle) * offsetRadius
     const rotation = Math.random() * 360
-    const scale = 3 + Math.random() * 3 
+    const scale = 3 + Math.random() * 3
     const opacity = 1 //keep 1 opacity bc transparant image alr
-    
+
     positions.push({ x, y, rotation, scale, opacity })
   }
-  
+
   return positions
 }
 
@@ -122,12 +136,12 @@ export default function TimelinePage() {
   const [isGenerating, setIsGenerating] = useState(false)
   const [isCalendarOpen, setIsCalendarOpen] = useState(false)
   const [selectedMilestone, setSelectedMilestone] = useState<Milestone | null>(null)
-  
+
   const cherryBlossomImage = "/blossom.png"
 
   // Check for AI-generated report on component mount
   useEffect(() => {
-    const storedReport = localStorage.getItem('ai_generated_timeline_report')
+    const storedReport = localStorage.getItem("ai_generated_timeline_report")
     if (storedReport) {
       setAiReport(JSON.parse(storedReport))
     }
@@ -136,11 +150,11 @@ export default function TimelinePage() {
   // Function to generate new timeline using saved questionnaire data
   const generateNewTimeline = async () => {
     // Get saved questionnaire data
-    const storedBasicInfo = localStorage.getItem('questionnaire_basic_info')
-    const storedAnswers = localStorage.getItem('questionnaire_further_questions')
+    const storedBasicInfo = localStorage.getItem("questionnaire_basic_info")
+    const storedAnswers = localStorage.getItem("questionnaire_further_questions")
 
     if (!storedBasicInfo || !storedAnswers) {
-      alert('No questionnaire data found. Please complete the questionnaire first.')
+      alert("No questionnaire data found. Please complete the questionnaire first.")
       return
     }
 
@@ -150,17 +164,17 @@ export default function TimelinePage() {
       const basicInfo = JSON.parse(storedBasicInfo)
       const answers = JSON.parse(storedAnswers)
 
-      const response = await fetch('/api/groq/report', {
-        method: 'POST',
+      const response = await fetch("/api/groq/report", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          userId: '4', // Using test user ID
+          userId: "4", // Using test user ID
           questionnaireData: {
             basicInfo,
-            furtherQuestions: answers
-          }
+            furtherQuestions: answers,
+          },
         }),
       })
 
@@ -169,7 +183,7 @@ export default function TimelinePage() {
       if (data.success) {
         const reportData = {
           content: data.report.content,
-          generatedAt: data.report.generatedAt
+          generatedAt: data.report.generatedAt,
         }
         setAiReport(reportData)
 
@@ -177,14 +191,14 @@ export default function TimelinePage() {
         parseAIReportAndUpdateTimeline(data.report.content)
 
         // Store new report in localStorage
-        localStorage.setItem('ai_generated_timeline_report', JSON.stringify(reportData))
+        localStorage.setItem("ai_generated_timeline_report", JSON.stringify(reportData))
       } else {
-        console.error('Failed to generate report:', data.error)
-        alert('Failed to generate new timeline. Please try again.')
+        console.error("Failed to generate report:", data.error)
+        alert("Failed to generate new timeline. Please try again.")
       }
     } catch (error) {
-      console.error('Error generating report:', error)
-      alert('Error generating new timeline. Please try again.')
+      console.error("Error generating report:", error)
+      alert("Error generating new timeline. Please try again.")
     } finally {
       setIsGenerating(false)
     }
@@ -249,11 +263,51 @@ export default function TimelinePage() {
     setIsEditing(true)
   }
 
+  const handlePhotoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (file && editForm) {
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        const imageUrl = e.target?.result as string
+        setEditForm({ ...editForm, image: imageUrl })
+      }
+      reader.readAsDataURL(file)
+    }
+  }
+
+  // Helper function to extract year from milestone year field
+  const extractYearFromMilestone = (yearString: string): number | null => {
+    // Handle "Now" case - return current year
+    if (yearString === "Now") {
+      return currentYear
+    }
+    
+    // Extract year from strings like "2026", "January 2026", "2026", etc.
+    const yearMatch = yearString.match(/\b(20\d{2})\b/)
+    return yearMatch ? parseInt(yearMatch[1], 10) : null
+  }
+
   const handleSaveMilestone = () => {
     if (editForm) {
       setCurrentMilestones((prev) => prev.map((m) => (m.id === editForm.id ? editForm : m)))
       setSelectedMilestone(editForm)
       setIsEditing(false)
+
+      // If this is a yearly milestone with an image, sync it to monthly milestones
+      if (viewMode === "yearly" && editForm.image) {
+        const milestoneYear = extractYearFromMilestone(editForm.year)
+        if (milestoneYear) {
+          setMonthlyMilestones((prevMonthly) =>
+            prevMonthly.map((monthlyMilestone) => {
+              const monthlyYear = extractYearFromMilestone(monthlyMilestone.year)
+              if (monthlyYear === milestoneYear) {
+                return { ...monthlyMilestone, image: editForm.image }
+              }
+              return monthlyMilestone
+            })
+          )
+        }
+      }
     }
   }
 
@@ -283,11 +337,10 @@ export default function TimelinePage() {
     }
   }
 
-
   // Function to parse AI report and update timeline milestones
   const parseAIReportAndUpdateTimeline = (reportContent: string) => {
     // Parse the AI report to extract milestones and update the timeline
-    const lines = reportContent.split('\n')
+    const lines = reportContent.split("\n")
     const aiYearlyMilestones: Milestone[] = []
     const aiMonthlyMilestones: Milestone[] = []
 
@@ -301,22 +354,23 @@ export default function TimelinePage() {
           const content = yearMatch[2]
 
           // Extract the 3 focus items for this year
-          const items = content.split('\n').filter(line =>
-            line.trim().match(/^\d+\./) && line.trim().length > 0
-          ).slice(0, 3)
+          const items = content
+            .split("\n")
+            .filter((line) => line.trim().match(/^\d+\./) && line.trim().length > 0)
+            .slice(0, 3)
 
           if (items.length > 0) {
             aiYearlyMilestones.push({
               id: `ai-year-${index}`,
               year: year,
               title: `Year ${year} Focus Areas`,
-              description: items.join(' • '),
+              description: items.join(" • "),
               category: "AI Generated",
               completed: false,
               image: undefined,
               shortTermGoals: items.slice(0, 2),
               longTermGoals: items.slice(2, 4),
-              position: (index % 2 === 0 ? "bottom" : "top") as "top" | "bottom"
+              position: (index % 2 === 0 ? "bottom" : "top") as "top" | "bottom",
             })
           }
         }
@@ -325,37 +379,54 @@ export default function TimelinePage() {
 
     // Extract monthly milestones from the report
     // Try multiple patterns to catch different AI output formats
-    console.log('Parsing report content:', reportContent.substring(0, 500)) // Debug log
+    console.log("Parsing report content:", reportContent.substring(0, 500)) // Debug log
 
     // Pattern 1: "- Month 1 (e.g., "October 2025"):"
-    let monthlyMatches = reportContent.match(/- Month \d+ \(.*?\):\s*([\s\S]*?)(?=- Month \d+|Year \d+|$)/g)
+    let monthlyMatches = reportContent.match(/- Month \d+ $$.*?$$:\s*([\s\S]*?)(?=- Month \d+|Year \d+|$)/g)
 
     // Pattern 2: "- Month 1: October 2025"
     if (!monthlyMatches || monthlyMatches.length === 0) {
       monthlyMatches = reportContent.match(/- Month \d+:\s*([^:\n]+):\s*([\s\S]*?)(?=- Month \d+|Year \d+|$)/g)
     }
 
-    // Pattern 3: "- October 2025:"
+    // Pattern 3: "- Month 1: October 2025"
     if (!monthlyMatches || monthlyMatches.length === 0) {
       monthlyMatches = reportContent.match(/- ([^:\n]+ \d{4}):\s*([\s\S]*?)(?=- [^:\n]+ \d{4}|Year \d+|$)/g)
     }
 
     // Pattern 4: Look for any month names followed by numbered lists
     if (!monthlyMatches || monthlyMatches.length === 0) {
-      const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
-        'July', 'August', 'September', 'October', 'November', 'December']
-      monthlyMatches = reportContent.match(new RegExp(`- (${monthNames.join('|')}) \\d{4}:\\s*(.*?)(?=- (${monthNames.join('|')}) \\d{4}|Year \\d+|$)`, 'gs'))
+      const monthNames = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+      ]
+      monthlyMatches = reportContent.match(
+        new RegExp(
+          `- (${monthNames.join("|")}) \\d{4}:\\s*(.*?)(?=- (${monthNames.join("|")}) \\d{4}|Year \\d+|$)`,
+          "gs",
+        ),
+      )
     }
 
-    console.log('Found monthly matches:', monthlyMatches?.length || 0) // Debug log
+    console.log("Found monthly matches:", monthlyMatches?.length || 0) // Debug log
 
     if (monthlyMatches && monthlyMatches.length > 0) {
       monthlyMatches.forEach((match, index) => {
-        let monthName = ''
-        let content = ''
+        let monthName = ""
+        let content = ""
 
         // Try different extraction patterns
-        const pattern1 = match.match(/- Month \d+ \(.*?"(.*?)".*?\):\s*([\s\S]*)/)
+        const pattern1 = match.match(/- Month \d+ $$.*?"(.*?)".*?$$:\s*([\s\S]*)/)
         const pattern2 = match.match(/- Month \d+:\s*([^:\n]+):\s*([\s\S]*)/)
         const pattern3 = match.match(/- ([^:\n]+ \d{4}):\s*([\s\S]*)/)
 
@@ -372,9 +443,10 @@ export default function TimelinePage() {
 
         if (monthName && content) {
           // Extract the 3 actions for this month
-          const items = content.split('\n').filter(line =>
-            line.trim().match(/^\d+\./) && line.trim().length > 0
-          ).slice(0, 3)
+          const items = content
+            .split("\n")
+            .filter((line) => line.trim().match(/^\d+\./) && line.trim().length > 0)
+            .slice(0, 3)
 
           console.log(`Found month: ${monthName}, items: ${items.length}`) // Debug log
 
@@ -383,13 +455,13 @@ export default function TimelinePage() {
               id: `ai-month-${index}`,
               year: monthName,
               title: `${monthName} Actions`,
-              description: items.join(' • '),
+              description: items.join(" • "),
               category: "AI Generated",
               completed: false,
               image: undefined,
               shortTermGoals: items.slice(0, 2),
               longTermGoals: items.slice(2, 4),
-              position: (index % 2 === 0 ? "bottom" : "top") as "top" | "bottom"
+              position: (index % 2 === 0 ? "bottom" : "top") as "top" | "bottom",
             })
           }
         }
@@ -397,12 +469,12 @@ export default function TimelinePage() {
     }
 
     // Merge AI-generated milestones with existing default milestones
-    setMilestones(prevMilestones => {
+    setMilestones((prevMilestones) => {
       const mergedMilestones = [...prevMilestones]
 
       // Update the "Now" milestone with AI-generated content if available
       if (aiYearlyMilestones.length > 0) {
-        const nowIndex = mergedMilestones.findIndex(m => m.year === "Now")
+        const nowIndex = mergedMilestones.findIndex((m) => m.year === "Now")
         if (nowIndex !== -1) {
           // Create an AI-generated "Now" milestone using the first year's data
           const firstYearData = aiYearlyMilestones[0]
@@ -417,8 +489,8 @@ export default function TimelinePage() {
       }
 
       // Replace default milestones with AI-generated ones where applicable
-      aiYearlyMilestones.forEach(aiMilestone => {
-        const existingIndex = mergedMilestones.findIndex(m => m.year === aiMilestone.year)
+      aiYearlyMilestones.forEach((aiMilestone) => {
+        const existingIndex = mergedMilestones.findIndex((m) => m.year === aiMilestone.year)
         if (existingIndex !== -1) {
           // Replace existing milestone with AI-generated one
           mergedMilestones[existingIndex] = aiMilestone
@@ -431,12 +503,41 @@ export default function TimelinePage() {
       return mergedMilestones
     })
 
-    setMonthlyMilestones(prevMilestones => {
+    // Sync yearly milestone images to monthly milestones
+    const updatedMilestones = [...milestones]
+    aiYearlyMilestones.forEach((aiMilestone) => {
+      const existingIndex = updatedMilestones.findIndex((m) => m.year === aiMilestone.year)
+      if (existingIndex !== -1) {
+        updatedMilestones[existingIndex] = aiMilestone
+      } else {
+        updatedMilestones.push(aiMilestone)
+      }
+    })
+
+    // Apply image sync to monthly milestones
+    updatedMilestones.forEach((yearlyMilestone) => {
+      if (yearlyMilestone.image) {
+        const milestoneYear = extractYearFromMilestone(yearlyMilestone.year)
+        if (milestoneYear) {
+          setMonthlyMilestones((prevMonthly) =>
+            prevMonthly.map((monthlyMilestone) => {
+              const monthlyYear = extractYearFromMilestone(monthlyMilestone.year)
+              if (monthlyYear === milestoneYear) {
+                return { ...monthlyMilestone, image: yearlyMilestone.image }
+              }
+              return monthlyMilestone
+            })
+          )
+        }
+      }
+    })
+
+    setMonthlyMilestones((prevMilestones) => {
       const mergedMilestones = [...prevMilestones]
 
       // Update the "Now" milestone with AI-generated content if available
       if (aiMonthlyMilestones.length > 0) {
-        const nowIndex = mergedMilestones.findIndex(m => m.year === "Now")
+        const nowIndex = mergedMilestones.findIndex((m) => m.year === "Now")
         if (nowIndex !== -1) {
           // Create an AI-generated "Now" milestone using the first month's data
           const firstMonthData = aiMonthlyMilestones[0]
@@ -451,8 +552,8 @@ export default function TimelinePage() {
       }
 
       // Replace default milestones with AI-generated ones where applicable
-      aiMonthlyMilestones.forEach(aiMilestone => {
-        const existingIndex = mergedMilestones.findIndex(m => m.year === aiMilestone.year)
+      aiMonthlyMilestones.forEach((aiMilestone) => {
+        const existingIndex = mergedMilestones.findIndex((m) => m.year === aiMilestone.year)
         if (existingIndex !== -1) {
           // Replace existing milestone with AI-generated one
           mergedMilestones[existingIndex] = aiMilestone
@@ -467,7 +568,7 @@ export default function TimelinePage() {
 
   // Load and parse AI report when component mounts
   useEffect(() => {
-    const storedReport = localStorage.getItem('ai_generated_timeline_report')
+    const storedReport = localStorage.getItem("ai_generated_timeline_report")
     if (storedReport) {
       const report = JSON.parse(storedReport)
       setAiReport(report)
@@ -483,11 +584,11 @@ export default function TimelinePage() {
   }, [aiReport])
 
   //generate cherry blossom positions for each milestone
-  const cherryBlossomData = currentMilestones.map((milestone, index) => {
+  const cherryBlossomData = currentMilestones.flatMap((milestone, index) => {
     const taskCount = milestone.shortTermGoals.length + milestone.longTermGoals.length
     const isTopPosition = milestone.position === "top"
     return generateCherryBlossomPositions(index, taskCount, isTopPosition)
-  }).flat()
+  })
 
   return (
     <div className="min-h-screen bg-background">
@@ -529,25 +630,13 @@ export default function TimelinePage() {
             </h1>
             <p className="text-lg text-muted-foreground max-w-3xl mx-auto mb-6">
               {aiReport
-                ? (viewMode === "yearly"
-                  ? "AI-Generated yearly goals and strategic focus areas"
-                  : "AI-Generated monthly actions and milestones")
-                : (viewMode === "yearly"
+                ? viewMode === "yearly"
+                  ? "Your yearly goals and strategic focus areas"
+                  : "Your monthly actions and milestones"
+                : viewMode === "yearly"
                   ? "Track your journey, set goals, and visualize your path to success"
-                  : "Plan your monthly milestones and track short-term progress")
-              }
+                  : "Plan your monthly milestones and track short-term progress"}
             </p>
-
-            {/* AI Generation Info */}
-            {aiReport && (
-              <div className="mb-6 flex justify-center">
-                <div className="bg-accent/10 px-4 py-2 rounded-full">
-                  <span className="text-sm font-medium text-accent">
-                    🤖 Generated on {new Date(aiReport.generatedAt).toLocaleDateString()}
-                  </span>
-                </div>
-              </div>
-            )}
 
             {/* AI Timeline Generation CTA - only show when no AI data */}
             {!aiReport && (
@@ -558,10 +647,11 @@ export default function TimelinePage() {
                     <h3 className="text-xl font-semibold">Get Your Personalized AI Timeline</h3>
                   </div>
                   <p className="text-muted-foreground mb-4">
-                    Generate a detailed, personalized timeline with specific goals and actionable steps based on your aspirations.
+                    Generate a detailed, personalized timeline with specific goals and actionable steps based on your
+                    aspirations.
                   </p>
                   <Button
-                    onClick={() => window.location.href = '/questionnaire/further-questions'}
+                    onClick={() => (window.location.href = "/questionnaire/further-questions")}
                     className="bg-accent hover:bg-accent/90 text-accent-foreground"
                   >
                     <Sparkles className="w-4 h-4 mr-2" />
@@ -587,9 +677,9 @@ export default function TimelinePage() {
                     imageSrc={cherryBlossomImage}
                   />
                 ))}
-                
+
                 {/* Horizontal Timeline Line */}
-                <div className="absolute top-1/2 left-0 right-0 h-2 bg-accent/30 rounded-full transform -translate-y-1/2 z-0"></div>
+                <div className="absolute top-1/2 left-0 right-0 h-2 bg-amber-800/30 rounded-full transform -translate-y-1/2 z-0"></div>
 
                 {/* Staggered Milestones */}
                 <div className="flex items-center space-x-32 relative z-10">
@@ -611,8 +701,9 @@ export default function TimelinePage() {
                                 <div
                                   className="absolute inset-0 bg-cover bg-center"
                                   style={{
-                                    backgroundImage: milestone.image ? `url(${milestone.image})` : "none",
-                                    backgroundColor: milestone.image ? "transparent" : "#f1f5f9",
+                                    backgroundImage: milestone.image
+                                      ? `url(${milestone.image})`
+                                      : "linear-gradient(135deg, #fce7f3 0%, #f3e8ff 100%)",
                                   }}
                                 >
                                   <div className="absolute inset-0 bg-black/40 group-hover:bg-black/30 transition-colors"></div>
@@ -622,9 +713,16 @@ export default function TimelinePage() {
                                     <h4 className="text-sm font-medium mb-2">{milestone.title}</h4>
                                     <p className="text-xs opacity-90 line-clamp-3">{milestone.description}</p>
                                   </div>
-                                  <Badge variant="secondary" className="self-start text-xs">
-                                    {milestone.shortTermGoals.length + milestone.longTermGoals.length} goals
-                                  </Badge>
+                                  <div className="flex items-center justify-between">
+                                    <Badge variant="secondary" className="text-xs">
+                                      {milestone.shortTermGoals.length + milestone.longTermGoals.length} goals
+                                    </Badge>
+                                    {!milestone.image && (
+                                      <div className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center">
+                                        <ImageIcon className="w-3 h-3" />
+                                      </div>
+                                    )}
+                                  </div>
                                 </CardContent>
                               </Card>
                             </DialogTrigger>
@@ -641,8 +739,9 @@ export default function TimelinePage() {
                             <div
                               className="absolute inset-0 bg-cover bg-center"
                               style={{
-                                backgroundImage: milestone.image ? `url(${milestone.image})` : "none",
-                                backgroundColor: milestone.image ? "transparent" : "#f1f5f9",
+                                backgroundImage: milestone.image
+                                  ? `url(${milestone.image})`
+                                  : "linear-gradient(135deg, #fce7f3 0%, #f3e8ff 100%)",
                               }}
                             >
                               <div className="absolute inset-0 bg-black/40 group-hover:bg-black/30 transition-colors"></div>
@@ -652,24 +751,32 @@ export default function TimelinePage() {
                                 <h4 className="text-sm font-medium mb-2">{milestone.title}</h4>
                                 <p className="text-xs opacity-90 line-clamp-3">{milestone.description}</p>
                               </div>
-                              <Badge variant="secondary" className="self-start text-xs">
-                                {milestone.shortTermGoals.length + milestone.longTermGoals.length} goals
-                              </Badge>
+                              <div className="flex items-center justify-between">
+                                <Badge variant="secondary" className="text-xs">
+                                  {milestone.shortTermGoals.length + milestone.longTermGoals.length} goals
+                                </Badge>
+                                {!milestone.image && (
+                                  <div className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center">
+                                    <ImageIcon className="w-3 h-3" />
+                                  </div>
+                                )}
+                              </div>
                             </CardContent>
                           </Card>
                         )}
 
                         {/* Connecting Line */}
                         <div
-                          className={`w-1 bg-accent/60 ${index % 2 === 0
-                            ? "h-12 mb-60" // Top milestones: line goes down to touch middle line
-                            : "h-12 mt-60" // Bottom milestones: line goes up to touch middle line
-                            }`}
+                          className={`w-1 bg-accent/60 ${
+                            index % 2 === 0
+                              ? "h-12 mb-60" // Top milestones: line goes down to touch middle line
+                              : "h-12 mt-60" // Bottom milestones: line goes up to touch middle line
+                          }`}
                         ></div>
                       </div>
 
                       {/* Timeline Dot */}
-                      <div className="absolute top-1/2 transform -translate-y-1/2 w-4 h-4 bg-accent rounded-full border-2 border-background shadow-lg z-20"></div>
+                      <div className="absolute top-1/2 transform -translate-y-1/2 w-4 h-4 bg-amber-800 rounded-full border-2 border-background shadow-lg z-20"></div>
                     </div>
                   ))}
                 </div>
@@ -689,7 +796,7 @@ export default function TimelinePage() {
                 onClick={generateNewTimeline}
                 variant="outline"
                 disabled={isGenerating}
-                className="group"
+                className="group bg-transparent"
               >
                 {isGenerating ? (
                   <>
@@ -704,7 +811,7 @@ export default function TimelinePage() {
                 )}
               </Button>
               <Button
-                onClick={() => window.location.href = '/questionnaire/further-questions'}
+                onClick={() => (window.location.href = "/questionnaire/further-questions")}
                 className="bg-accent hover:bg-accent/90 text-accent-foreground"
               >
                 <Calendar className="w-4 h-4 mr-2" />
@@ -727,9 +834,56 @@ export default function TimelinePage() {
 
           {editForm && (
             <div className="p-6">
-
               {/* All Content */}
               <div className="space-y-6">
+                <div>
+                  <Label className="text-base font-medium mb-3 block">Milestone Photo</Label>
+                  <div className="space-y-4">
+                    {editForm.image && (
+                      <div className="relative w-full h-48 rounded-lg overflow-hidden border-2 border-border">
+                        <img
+                          src={editForm.image || "/placeholder.svg"}
+                          alt="Milestone preview"
+                          className="w-full h-full object-cover"
+                        />
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          className="absolute top-2 right-2"
+                          onClick={() => setEditForm({ ...editForm, image: undefined })}
+                        >
+                          <X className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    )}
+                    <div className="flex items-center gap-4">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handlePhotoUpload}
+                        className="hidden"
+                        id="photo-upload"
+                      />
+                      <Label
+                        htmlFor="photo-upload"
+                        className="cursor-pointer flex items-center gap-2 px-4 py-2 border border-border rounded-lg hover:bg-muted transition-colors"
+                      >
+                        <Upload className="w-4 h-4" />
+                        {editForm.image ? "Change Photo" : "Upload Photo"}
+                      </Label>
+                      {editForm.image && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setEditForm({ ...editForm, image: undefined })}
+                        >
+                          Remove Photo
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
                 {/* Basic Info */}
                 <div className="grid grid-cols-2 gap-6">
                   <div>
@@ -897,7 +1051,6 @@ export default function TimelinePage() {
         </DialogContent>
       </Dialog>
 
-
       {/* Calendar Modal for Monthly Milestones */}
       <CalendarModal
         isOpen={isCalendarOpen}
@@ -912,29 +1065,57 @@ function MilestoneModal({ milestone, onEdit }: { milestone: Milestone; onEdit: (
   const { completedTasks, toggleTask } = useUserProgress()
 
   return (
-    <DialogContent className="max-w-3xl p-10">
-      <DialogHeader>
-        <DialogTitle className="flex items-center justify-between">
-          <span className="text-xl">
-            {milestone.year} - {milestone.title}
-          </span>
-          <Button variant="outline" size="sm" onClick={onEdit}>
+    <DialogContent className="max-w-3xl p-0 overflow-hidden">
+      {milestone.image && (
+        <div className="relative w-full h-48 overflow-hidden">
+          <img
+            src={milestone.image || "/placeholder.svg"}
+            alt={milestone.title}
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+          <div className="absolute bottom-4 left-6 right-6">
+            <h2 className="text-2xl font-bold text-white mb-1">
+              {milestone.year} - {milestone.title}
+            </h2>
+            <p className="text-white/90 text-sm">{milestone.description}</p>
+          </div>
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={onEdit}
+            className="absolute top-36 right-4 bg-white/20 backdrop-blur-sm border-white/30 text-white hover:bg-white/30"
+          >
             <Edit3 className="w-4 h-4 mr-2" />
             Edit
           </Button>
-        </DialogTitle>
-      </DialogHeader>
+        </div>
+      )}
 
-      <div className="space-y-6">
+      <div className="p-6">
+        {!milestone.image && (
+          <DialogHeader className="mb-6">
+            <DialogTitle className="flex items-center justify-between">
+              <span className="text-xl">
+                {milestone.year} - {milestone.title}
+              </span>
+              <Button variant="outline" size="sm" onClick={onEdit} className="mt-4">
+                <Edit3 className="w-4 h-4 mr-2" />
+                Edit
+              </Button>
+            </DialogTitle>
+          </DialogHeader>
+        )}
 
-        <p className="text-muted-foreground text-lg">{milestone.description}</p>
+        <div className="space-y-6">
+          {!milestone.image && <p className="text-muted-foreground text-lg">{milestone.description}</p>}
 
-        <div className="space-y-4">
+          {/* Short Term Goals */}
           <div>
-            <h4 className="font-semibold flex items-center space-x-2 mb-3 text-lg">
+            <Label className="flex items-center space-x-2 mb-3 text-base font-medium">
               <Clock className="w-5 h-5" />
               <span>Short Term Goals</span>
-            </h4>
+            </Label>
             <div className="space-y-2">
               {milestone.shortTermGoals.map((goal, index) => {
                 const taskId = `${milestone.id}-short-${index}`
@@ -947,20 +1128,19 @@ function MilestoneModal({ milestone, onEdit }: { milestone: Milestone; onEdit: (
                       onChange={() => toggleTask(taskId, goal)} // Pass the goal title
                       className="w-4 h-4 accent-accent"
                     />
-                    <span className={completedTasks[taskId] ? "line-through text-gray-400" : ""}>
-                      {goal}
-                    </span>
+                    <span className={completedTasks[taskId] ? "line-through text-gray-400" : ""}>{goal}</span>
                   </div>
                 )
               })}
             </div>
           </div>
 
+          {/* Long Term Goals */}
           <div>
-            <h4 className="font-semibold flex items-center space-x-2 mb-3 text-lg">
+            <Label className="flex items-center space-x-2 mb-3 text-base font-medium">
               <Target className="w-5 h-5" />
               <span>Long Term Goals</span>
-            </h4>
+            </Label>
             <div className="space-y-2">
               {/* Fixed: Now mapping over longTermGoals instead of shortTermGoals */}
               {milestone.longTermGoals.map((goal, index) => {
@@ -974,9 +1154,7 @@ function MilestoneModal({ milestone, onEdit }: { milestone: Milestone; onEdit: (
                       onChange={() => toggleTask(taskId, goal)}
                       className="w-4 h-4 accent-accent"
                     />
-                    <span className={completedTasks[taskId] ? "line-through text-gray-400" : ""}>
-                      {goal}
-                    </span>
+                    <span className={completedTasks[taskId] ? "line-through text-gray-400" : ""}>{goal}</span>
                   </div>
                 )
               })}

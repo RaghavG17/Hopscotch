@@ -9,8 +9,9 @@ import { Textarea } from "@/components/ui/textarea"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
-import { Calendar, CheckCircle, Sparkles, Target, Clock, Heart, Trophy, ArrowLeft, User, Briefcase, Users, Brain, BookOpen, MessageCircle, Plus, Minus, ChevronDown, ChevronUp, Loader2 } from "lucide-react"
+import { CheckCircle, Sparkles, Target, Clock, Heart, Trophy, ArrowLeft, User, Briefcase, Users, Brain, BookOpen, MessageCircle, Plus, Minus, ChevronDown, ChevronUp, Loader2 } from "lucide-react"
 import Link from "next/link"
+import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/lib/auth-context"
 
@@ -466,7 +467,7 @@ export default function FurtherQuestionsPage() {
                     onClick={() => router.push('/timeline')}
                     className="bg-accent hover:bg-accent/90 text-accent-foreground"
                   >
-                    <Calendar className="w-4 h-4 mr-2" />
+                    <Target className="w-4 h-4 mr-2" />
                     View Timeline
                   </Button>
                   <Button
@@ -489,8 +490,14 @@ export default function FurtherQuestionsPage() {
       <header className="bg-background/80 backdrop-blur-lg border-b border-border/50">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <Link href="/" className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
-            <div className="w-8 h-8 bg-accent rounded-lg flex items-center justify-center shadow-sm">
-              <Calendar className="w-5 h-5 text-accent-foreground" />
+            <div className="w-8 h-8 overflow-hidden">
+              <Image
+                src="/logo.png"
+                alt="Chronos Logo"
+                width={32}
+                height={32}
+                className="w-full h-full object-contain"
+              />
             </div>
             <span className="text-xl font-bold text-foreground">Chronos</span>
           </Link>
@@ -507,7 +514,7 @@ export default function FurtherQuestionsPage() {
             <p className="text-xl text-muted-foreground text-pretty max-w-2xl mx-auto mb-4">
               Choose one or more areas of growth to focus on. You only need to complete one area to get started!
             </p>
-            <div className="bg-accent/20 border border-accent/40 rounded-lg p-4 max-w-2xl mx-auto">
+            <div className="bg-primary/50 border border-accent/40 rounded-lg p-4 max-w-2xl mx-auto">
               <p className="text-sm text-accent-foreground font-medium">
                 💡 Tip: Complete at least one growth area (Personal, Professional, or Social) to generate your timeline. The others are optional add-ons!
               </p>

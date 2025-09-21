@@ -8,8 +8,9 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Label } from "@/components/ui/label"
-import { Calendar, User, ArrowRight, Heart, Briefcase, Home, Star, GraduationCap, Baby, Users, Plane, Loader2 } from "lucide-react"
+import { User, ArrowRight, Heart, Briefcase, Home, Star, GraduationCap, Baby, Users, Plane, Loader2 } from "lucide-react"
 import Link from "next/link"
+import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/lib/auth-context"
 
@@ -138,8 +139,14 @@ export default function BasicInfoPage() {
             <header className="bg-background/80 backdrop-blur-lg border-b border-border/50">
                 <div className="container mx-auto px-4 py-4 flex items-center justify-between">
                     <Link href="/" className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
-                        <div className="w-8 h-8 bg-accent rounded-lg flex items-center justify-center shadow-sm">
-                            <Calendar className="w-5 h-5 text-accent-foreground" />
+                        <div className="w-8 h-8 overflow-hidden">
+                            <Image
+                                src="/logo.png"
+                                alt="Chronos Logo"
+                                width={32}
+                                height={32}
+                                className="w-full h-full object-contain"
+                            />
                         </div>
                         <span className="text-xl font-bold text-foreground">Chronos</span>
                     </Link>

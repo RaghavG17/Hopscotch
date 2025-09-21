@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -46,8 +47,14 @@ export function SharedNavbar({ variant = "app", showNavigation = true }: SharedN
                     href="/"
                     className="flex items-center space-x-2 hover:opacity-80 transition-opacity"
                 >
-                    <div className="w-8 h-8 bg-accent rounded-lg flex items-center justify-center">
-                        <Calendar className="w-5 h-5 text-accent-foreground" />
+                    <div className="w-8 h-8 rounded-lg overflow-hidden">
+                        <Image
+                            src="/logo.png"
+                            alt="Chronos Logo"
+                            width={32}
+                            height={32}
+                            className="w-full h-full object-contain"
+                        />
                     </div>
                     <span className="text-xl font-bold text-foreground">Chronos</span>
                 </Link>
