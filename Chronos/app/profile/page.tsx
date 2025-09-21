@@ -1,9 +1,13 @@
+"use client";
 import { Navbar } from "@/components/ui/navbar";
 import Image from "next/image";
-import React from "react";
+import { CalendarModal } from "@/components/calendar";
+import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
 
 const ProfilePage = () => {
 //temp data rn, replac eonce raghav makes sqlite live
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
 
     const user = {
     username: "tempsarah",
@@ -33,6 +37,7 @@ const ProfilePage = () => {
             <p className="text-gray-600 text-center">{user.bio}</p>
         </div>
     </div>
+    
     </div>
   );
 };
