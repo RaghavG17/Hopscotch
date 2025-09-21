@@ -8,6 +8,9 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Navbar } from "@/components/ui/navbar";
+import { AuthModal } from "@/components/auth/auth-modal";
+import { SimpleUserMenu } from "@/components/auth/simple-user-menu";
+import { useAuth } from "@/lib/auth-context";
 import {
   Trophy,
   Target,
@@ -20,6 +23,7 @@ import {
   Clock,
   CheckCircle2,
   Lock,
+  Calendar,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -46,7 +50,9 @@ interface Stats {
 }
 
 export default function AchievementsPage() {
+  const { currentUser } = useAuth();
   const [activeTab, setActiveTab] = useState("all");
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
   const stats: Stats = {
     totalAchievements: 24,
@@ -166,7 +172,42 @@ export default function AchievementsPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
+      {/* Header */}
+      <header className="border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50">
+        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+          <a href="/" className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
+            <div className="w-8 h-8 bg-accent rounded-lg flex items-center justify-center">
+              <Calendar className="w-5 h-5 text-accent-foreground" />
+            </div>
+            <span className="text-xl font-bold text-foreground">Chronos</span>
+          </a>
+          <nav className="hidden md:flex items-center space-x-6">
+            <a href="/timeline" className="text-muted-foreground hover:text-foreground transition-colors">
+              Timeline
+            </a>
+            <a href="/friends" className="text-muted-foreground hover:text-foreground transition-colors">
+              Friends
+            </a>
+            <a href="/achievements" className="text-foreground font-medium">
+              Achievements
+            </a>
+          </nav>
+          <div className="flex items-center space-x-4">
+            {/* Authentication */}
+            {currentUser ? (
+              <SimpleUserMenu />
+            ) : (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setIsAuthModalOpen(true)}
+              >
+                Sign In
+              </Button>
+            )}
+          </div>
+        </div>
+      </header>
 
       {/* Achievements Section */}
       <section className="py-12">
@@ -260,11 +301,10 @@ export default function AchievementsPage() {
                 {filteredAchievements.map((achievement) => (
                   <Card
                     key={achievement.id}
-                    className={`relative overflow-hidden transition-all duration-300 ${
-                      achievement.isUnlocked
-                        ? "hover:shadow-lg border-accent/20"
-                        : "opacity-75 hover:opacity-90"
-                    }`}
+                    className={`relative overflow-hidden transition-all duration-300 ${achievement.isUnlocked
+                      ? "hover:shadow-lg border-accent/20"
+                      : "opacity-75 hover:opacity-90"
+                      }`}
                   >
                     {!achievement.isUnlocked && (
                       <div className="absolute top-2 right-2 z-10">
@@ -275,11 +315,10 @@ export default function AchievementsPage() {
                     <CardHeader className="pb-4">
                       <div className="flex items-center justify-between">
                         <div
-                          className={`p-3 rounded-lg ${
-                            achievement.isUnlocked
-                              ? "bg-accent/10 text-accent"
-                              : "bg-muted text-muted-foreground"
-                          }`}
+                          className={`p-3 rounded-lg ${achievement.isUnlocked
+                            ? "bg-accent/10 text-accent"
+                            : "bg-muted text-muted-foreground"
+                            }`}
                         >
                           {achievement.icon}
                         </div>
@@ -371,6 +410,12 @@ export default function AchievementsPage() {
           </Tabs>
         </div>
       </section>
+
+      {/* Auth Modal */}
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+      />
     </div>
   );
 }
