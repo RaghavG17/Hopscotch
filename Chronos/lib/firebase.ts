@@ -3,17 +3,12 @@ import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
+import { firebaseConfig } from "./config";
 
-// Your web app's Firebase configuration
-const firebaseConfig = {
-    apiKey: "AIzaSyAikGQVIazlsfaAeJ-xmVddT6VxwnZhPXs",
-    authDomain: "sixseven-5aa55.firebaseapp.com",
-    projectId: "sixseven-5aa55",
-    storageBucket: "sixseven-5aa55.firebasestorage.app",
-    messagingSenderId: "939319459108",
-    appId: "1:939319459108:web:cd687ae48a8bcae26207b1",
-    measurementId: "G-XF7DGRCSHM"
-};
+// Validate Firebase configuration on startup
+if (!firebaseConfig.apiKey) {
+    console.warn('⚠️  Firebase API key not configured. Authentication may not work properly.');
+}
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
