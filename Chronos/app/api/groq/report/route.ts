@@ -3,7 +3,7 @@ import Groq from 'groq-sdk';
 import { dbService } from '@/lib/database';
 
 const groq = new Groq({
-  apiKey: process.env.GROQ_API_KEY || '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',
+  apiKey: process.env.GROQ_API_KEY || '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',
 });
 
 interface QuestionnaireData {
@@ -159,8 +159,8 @@ Year 2026:
   … (continue until June 2026)
 `;
 
-    // Generate the report using Groq
-    const completion = await groq.chat.completions.create({
+    // STEP 1: Generate initial report structure using Llama 3.1-8b-instant
+    const initialCompletion = await groq.chat.completions.create({
       messages: [
         {
           role: "system",
@@ -176,7 +176,72 @@ Year 2026:
       max_tokens: 2000,
     });
 
-    const reportContent = completion.choices[0]?.message?.content || '';
+    const initialReport = initialCompletion.choices[0]?.message?.content || '';
+
+    if (!initialReport) {
+      return NextResponse.json({ error: 'Failed to generate initial report structure' }, { status: 500 });
+    }
+
+    // STEP 2: Enhance with detailed timeline using Llama 3.3-70b-versatile
+    const enhancementPrompt = `
+You are an expert timeline strategist. Take the following initial timeline report and enhance it with SPECIFIC DATES, MONTHS, and YEARS to create a detailed, actionable timeline.
+
+CRITICAL REQUIREMENTS:
+1. **EXACTLY 3 SUGGESTIONS PER PERIOD**: Each year must have exactly 3 yearly focus items, and each month must have exactly 3 monthly actions
+2. **ADD SPECIFIC DATES**: Replace vague timelines with exact months and years (e.g., "October 2025", "March 2026")
+3. **MAINTAIN TIMELINE ACCURACY**: Keep the same overall timeline structure but add precise dates
+4. **ENHANCE DETAILS**: Add more specific, measurable actions with exact timing
+5. **PRESERVE STRUCTURE**: Keep the same goal areas and overall format
+
+**Initial Report to Enhance:**
+${initialReport}
+
+**MANDATORY Output Format:**
+For each goal area (Personal, Professional, Social):
+
+**Short-term Goals (X months):**
+- Month 1 (e.g., "October 2025"):
+  1. [Specific action 1]
+  2. [Specific action 2] 
+  3. [Specific action 3]
+- Month 2 (e.g., "November 2025"):
+  1. [Specific action 1]
+  2. [Specific action 2]
+  3. [Specific action 3]
+- Continue for each month in the timeline...
+
+**Long-term Goals (X years):**
+- Year 1 (e.g., "2026"):
+  1. [Yearly focus item 1]
+  2. [Yearly focus item 2]
+  3. [Yearly focus item 3]
+- Year 2 (e.g., "2027"):
+  1. [Yearly focus item 1]
+  2. [Yearly focus item 2]
+  3. [Yearly focus item 3]
+- Continue for each year in the timeline...
+
+**CRITICAL**: Every single month and year must have exactly 3 numbered items. No more, no less.
+`;
+
+    const enhancedCompletion = await groq.chat.completions.create({
+      messages: [
+        {
+          role: "system",
+          content: "You are an expert timeline strategist specializing in creating detailed, date-specific action plans. Your role is to take initial timeline structures and enhance them with specific dates, months, and years to create actionable, time-bound plans. CRITICAL: Every year must have exactly 3 yearly focus items, and every month must have exactly 3 monthly actions. Always maintain the original goals and structure while adding precise timing details."
+        },
+        {
+          role: "user",
+          content: enhancementPrompt
+        }
+      ],
+      model: "llama-3.3-70b-versatile",
+      temperature: 0.6,
+      max_tokens: 3000,
+    });
+
+    const enhancedReport = enhancedCompletion.choices[0]?.message?.content || '';
+    const reportContent = enhancedReport || initialReport;
 
     if (!reportContent) {
       return NextResponse.json({ error: 'Failed to generate report' }, { status: 500 });
@@ -219,9 +284,9 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({
       success: true,
       report: {
-        id: report.id,
-        content: report.content,
-        generatedAt: report.generated_at
+        id: (report as any).id,
+        content: (report as any).content,
+        generatedAt: (report as any).generated_at
       }
     });
 
