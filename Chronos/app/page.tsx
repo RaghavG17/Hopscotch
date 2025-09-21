@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { AuthModal } from "@/components/auth/auth-modal"
 import { SimpleUserMenu } from "@/components/auth/simple-user-menu"
-import { Navbar } from "@/components/ui/navbar"
+import { SharedNavbar } from "@/components/ui/shared-navbar"
 import { useAuth } from "@/lib/auth-context"
 import {
   ArrowRight,
@@ -27,38 +27,7 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-accent rounded-lg flex items-center justify-center">
-              <Calendar className="w-5 h-5 text-accent-foreground" />
-            </div>
-            <span className="text-xl font-bold text-foreground">Chronos</span>
-          </div>
-          <nav className="hidden md:flex items-center space-x-6">
-            <Link href="#features" className="text-muted-foreground hover:text-foreground transition-colors">
-              Features
-            </Link>
-            <Link href="#community" className="text-muted-foreground hover:text-foreground transition-colors">
-              Community
-            </Link>
-            <Link href="timeline" className="text-muted-foreground hover:text-foreground transition-colors">
-              Timeline
-            </Link>
-          </nav>
-          {currentUser ? (
-            <SimpleUserMenu />
-          ) : (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setIsAuthModalOpen(true)}
-            >
-              Sign In
-            </Button>
-          )}
-        </div>
-      </header>
+      <SharedNavbar variant="home" />
 
       {/* Hero Section */}
       <section
