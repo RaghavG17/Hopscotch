@@ -45,10 +45,10 @@ Chronos uses a centralized API key management system that ensures seamless integ
 
 4. **Configure API keys in `.env.local`**
    ```bash
-   # Required API Keys
-   GROQ_API_KEY=your_groq_api_key_here
-   GOOGLE_CLIENT_ID=your_google_client_id_here
-   GOOGLE_CLIENT_SECRET=your_google_client_secret_here
+   # Required API Keys (shared for team use)
+   GROQ_API_KEY=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
+   GOOGLE_CLIENT_ID=test_google_client_id
+   GOOGLE_CLIENT_SECRET=test_google_client_secret
    
    # Optional: Custom Firebase project (defaults provided)
    FIREBASE_API_KEY=your_firebase_api_key_here
