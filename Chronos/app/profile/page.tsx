@@ -1,5 +1,7 @@
 "use client";
 import Image from "next/image";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 import {
   MapPin,
   Calendar,
@@ -7,31 +9,155 @@ import {
   GraduationCap,
   Heart,
   Mail,
+  FileText,
+  User,
+  LogIn,
+  Loader2,
 } from "lucide-react";
-import { Navbar } from "@/components/ui/navbar";
+import { AppNavbar } from "@/components/ui/app-navbar";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { useAuth } from "@/lib/auth-context";
+import { AuthModal } from "@/components/auth/auth-modal";
+
+interface QuestionnaireData {
+  name?: string;
+  age?: string;
+  graduation?: string;
+  school_name?: string;
+  graduation_year?: string;
+  first_job?: string;
+  promotion?: string;
+  retirement?: string;
+  relationship_status?: string;
+  family_status?: string;
+  moved_out?: string;
+  hobbies?: string;
+  interests?: string;
+  location?: string;
+  occupation?: string;
+}
 
 const ProfilePage = () => {
+  const { currentUser, loading } = useAuth();
+  const [questionnaireData, setQuestionnaireData] = useState<QuestionnaireData | null>(null);
+  const [hasCompletedQuestionnaire, setHasCompletedQuestionnaire] = useState(false);
+  const [isLoadingData, setIsLoadingData] = useState(true);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+
+  // Fetch questionnaire data when user is authenticated
+  useEffect(() => {
+    const fetchQuestionnaireData = async () => {
+      if (!currentUser) {
+        setIsLoadingData(false);
+        return;
+      }
+
+      try {
+        const response = await fetch(`/api/questionnaire?uid=${currentUser.uid}`);
+        if (response.ok) {
+          const data = await response.json();
+          setQuestionnaireData(data.questionnaireData);
+          setHasCompletedQuestionnaire(data.hasCompletedQuestionnaire);
+        }
+      } catch (error) {
+        console.error('Error fetching questionnaire data:', error);
+      } finally {
+        setIsLoadingData(false);
+      }
+    };
+
+    fetchQuestionnaireData();
+  }, [currentUser]);
+
+  // Show loading state
+  if (loading || isLoadingData) {
+    return (
+      <div>
+        <AppNavbar />
+        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
+          <div className="max-w-4xl mx-auto pt-8">
+            <div className="flex items-center justify-center h-64">
+              <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Show sign-in prompt for unauthenticated users
+  if (!currentUser) {
+    return (
+      <div>
+        <AppNavbar />
+        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
+          <div className="max-w-4xl mx-auto pt-8">
+            <Card className="bg-white shadow-xl">
+              <CardHeader className="text-center">
+                <div className="mx-auto w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-4">
+                  <User className="w-8 h-8 text-blue-600" />
+                </div>
+                <CardTitle className="text-2xl font-bold text-gray-900 mb-2">
+                  Sign In to View Your Profile
+                </CardTitle>
+                <CardDescription className="text-gray-600 mb-6">
+                  Create an account or sign in to access your personal timeline, manage your goals, and connect with friends.
+                </CardDescription>
+                <Button
+                  onClick={() => setIsAuthModalOpen(true)}
+                  className="w-full sm:w-auto"
+                  size="lg"
+                >
+                  <LogIn className="w-5 h-5 mr-2" />
+                  Sign In / Sign Up
+                </Button>
+              </CardHeader>
+              <CardContent className="text-center">
+                <p className="text-sm text-gray-500">
+                  Join thousands of users building their life stories with Chronos
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+
+        <AuthModal
+          isOpen={isAuthModalOpen}
+          onClose={() => setIsAuthModalOpen(false)}
+        />
+      </div>
+    );
+  }
+
+  // Prepare user data from authentication and questionnaire
   const user = {
-    username: "Sarah Chen",
-    displayName: "Sarah",
-    bio: "Passionate software engineer and world traveler. Love discovering new cultures, trying local cuisines, and capturing life's beautiful moments. Currently based in Dubai, always planning the next adventure!",
-    profilePic: "/emily-rodriguez.jpg",
-    location: "Dubai, UAE",
-    joinDate: "March 2022",
-    occupation: "Senior Software Engineer",
-    education: "Computer Science, Stanford University",
-    interests: ["Travel", "Photography", "Matcha", "Tech", "Hiking"],
-    email: "sarah.chen@email.com",
+    username: questionnaireData?.name || currentUser.displayName || "User",
+    displayName: currentUser.displayName || questionnaireData?.name || "User",
+    bio: questionnaireData?.hobbies ?
+      `Passionate about ${questionnaireData.hobbies}. ${questionnaireData.interests || 'Always exploring new interests and opportunities.'}` :
+      "Welcome to your Chronos profile! Complete the questionnaire to personalize your experience.",
+    profilePic: currentUser.photoURL || "/placeholder.svg",
+    location: questionnaireData?.location || "Location not set",
+    joinDate: new Date(currentUser.metadata.creationTime || Date.now()).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }),
+    occupation: questionnaireData?.occupation || "Occupation not set",
+    education: questionnaireData?.school_name && questionnaireData?.graduation_year ?
+      `${questionnaireData.graduation}, ${questionnaireData.school_name} (${questionnaireData.graduation_year})` :
+      "Education not set",
+    interests: questionnaireData?.interests ?
+      questionnaireData.interests.split(',').map(i => i.trim()).filter(i => i) :
+      ["Complete questionnaire to see interests"],
+    email: currentUser.email || "",
     stats: {
-      timelineEvents: 47,
-      friends: 128,
-      achievements: 23,
+      timelineEvents: 0, // TODO: Get from database
+      friends: 0, // TODO: Get from database
+      achievements: 0, // TODO: Get from database
     },
   };
 
   return (
     <div>
-      <Navbar />
+      <AppNavbar />
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
         <div className="max-w-4xl mx-auto pt-8">
           <div className="bg-white shadow-xl rounded-2xl overflow-hidden">
@@ -99,6 +225,51 @@ const ProfilePage = () => {
                     </div>
                     <div className="text-sm text-gray-600">Achievements</div>
                   </div>
+                </div>
+
+                {/* Questionnaire Section */}
+                <div className="mb-6">
+                  {hasCompletedQuestionnaire ? (
+                    <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-6 border border-green-200">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h3 className="text-lg font-semibold text-gray-900 mb-2 flex items-center">
+                            <FileText className="w-5 h-5 mr-2 text-green-600" />
+                            Profile Complete
+                          </h3>
+                          <p className="text-gray-600 text-sm">
+                            Your profile is personalized with questionnaire data. You can update it anytime.
+                          </p>
+                        </div>
+                        <Link href="/questionnaire">
+                          <Button variant="outline" className="border-green-300 text-green-700 hover:bg-green-50">
+                            <FileText className="w-4 h-4 mr-2" />
+                            Update Profile
+                          </Button>
+                        </Link>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg p-6 border border-purple-200">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h3 className="text-lg font-semibold text-gray-900 mb-2 flex items-center">
+                            <FileText className="w-5 h-5 mr-2 text-purple-600" />
+                            Complete Your Profile
+                          </h3>
+                          <p className="text-gray-600 text-sm">
+                            Take our questionnaire to personalize your experience and get better recommendations.
+                          </p>
+                        </div>
+                        <Link href="/questionnaire">
+                          <Button className="bg-purple-600 hover:bg-purple-700 text-white">
+                            <FileText className="w-4 h-4 mr-2" />
+                            Start Questionnaire
+                          </Button>
+                        </Link>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 {/* Additional Info */}
