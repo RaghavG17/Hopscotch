@@ -124,6 +124,18 @@ export function initializeDatabase() {
     )
   `);
 
+  // Reports table for AI-generated user reports
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS reports (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      user_id INTEGER NOT NULL,
+      report_type TEXT DEFAULT 'questionnaire_analysis', -- questionnaire_analysis, goal_review, etc.
+      content TEXT NOT NULL,
+      generated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+    )
+  `);
+
   // Create indexes for better performance
   db.exec(`
     CREATE INDEX IF NOT EXISTS idx_users_firebase_uid ON users(firebase_uid);
@@ -136,6 +148,8 @@ export function initializeDatabase() {
     CREATE INDEX IF NOT EXISTS idx_goals_status ON goals(status);
     CREATE INDEX IF NOT EXISTS idx_user_communities_user_id ON user_communities(user_id);
     CREATE INDEX IF NOT EXISTS idx_user_communities_community_id ON user_communities(community_id);
+    CREATE INDEX IF NOT EXISTS idx_reports_user_id ON reports(user_id);
+    CREATE INDEX IF NOT EXISTS idx_reports_type ON reports(report_type);
   `);
 
   console.log('Database initialized successfully');
@@ -243,6 +257,25 @@ export const dbService = {
   updateGoalStatus: (goalId: number, status: string) => {
     const stmt = db.prepare('UPDATE goals SET status = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?');
     return stmt.run(status, goalId);
+  },
+
+  // Report operations
+  createReport: (userId: number, reportType: string, content: string) => {
+    const stmt = db.prepare(`
+      INSERT INTO reports (user_id, report_type, content)
+      VALUES (?, ?, ?)
+    `);
+    return stmt.run(userId, reportType, content);
+  },
+
+  getReportsByUserId: (userId: number) => {
+    const stmt = db.prepare('SELECT * FROM reports WHERE user_id = ? ORDER BY generated_at DESC');
+    return stmt.all(userId);
+  },
+
+  getLatestReportByUserId: (userId: number, reportType: string = 'questionnaire_analysis') => {
+    const stmt = db.prepare('SELECT * FROM reports WHERE user_id = ? AND report_type = ? ORDER BY generated_at DESC LIMIT 1');
+    return stmt.get(userId, reportType);
   }
 };
 

@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { GeistSans } from 'geist/font/sans'
 import { GeistMono } from 'geist/font/mono'
 import { AuthProvider } from '@/lib/auth-context'
+import { UserProgressProvider } from '@/context/UserProgressContext'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -19,7 +20,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable}`}>
         <AuthProvider>
-          {children}
+          <UserProgressProvider>
+              {children}
+          </UserProgressProvider>
         </AuthProvider>
       </body>
     </html>
