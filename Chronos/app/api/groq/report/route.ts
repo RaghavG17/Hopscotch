@@ -1,10 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Groq from 'groq-sdk';
 import { dbService } from '@/lib/database';
+import { groqConfig } from '@/lib/config';
 
-const groq = new Groq({
-  apiKey: process.env.GROQ_API_KEY || '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',
-});
+// Initialize Groq with centralized configuration
+const groq = groqConfig.enabled ? new Groq({
+  apiKey: groqConfig.apiKey,
+}) : null;
 
 interface QuestionnaireData {
   basicInfo: {
@@ -50,6 +52,13 @@ interface QuestionnaireData {
 
 export async function POST(request: NextRequest) {
   try {
+    // Check if Groq service is properly configured
+    if (!groqConfig.enabled || !groq) {
+      return NextResponse.json({
+        error: 'Groq AI service is not configured. Please set GROQ_API_KEY in your .env.local file.'
+      }, { status: 500 });
+    }
+
     const { userId, questionnaireData }: { userId: number; questionnaireData: QuestionnaireData } = await request.json();
 
     console.log('Groq API received userId:', userId, 'type:', typeof userId);
