@@ -62,6 +62,21 @@ try {
         console.log('🔑 All API keys are pre-configured for team use\n');
     }
 
+    // Initialize database with a test user
+    try {
+        const { initializeDatabase } = require('./lib/database');
+        const { dbService } = require('./lib/database');
+
+        // Create a test user if it doesn't exist
+        const testUser = dbService.getUserByFirebaseUid('test-user-1');
+        if (!testUser) {
+            dbService.createUser('test-user-1', 'test@example.com', 'Test User');
+            console.log('✅ Created test user in database');
+        }
+    } catch (error) {
+        console.log('⚠️  Database initialization will happen on first run');
+    }
+
     console.log('🎉 Setup complete! You can now run:');
     console.log('   npm run dev\n');
 
