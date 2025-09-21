@@ -238,7 +238,7 @@ export const dbService = {
       INSERT INTO timelines (user_id, title, description, is_public)
       VALUES (?, ?, ?, ?)
     `);
-    return stmt.run(userId, title, description, isPublic);
+    return stmt.run(userId, title, description, isPublic ? 1 : 0);
   },
 
   getTimelinesByUserId: (userId: number) => {
