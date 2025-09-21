@@ -81,10 +81,14 @@ export default function FurtherQuestionsPage() {
   const [report, setReport] = useState<{ content: string; generatedAt: string } | null>(null)
   const [showReport, setShowReport] = useState(false)
   const handleInputChange = (field: keyof FurtherQuestionsData, value: string) => {
-    setAnswers(prev => ({
-      ...prev,
+    const newAnswers = {
+      ...answers,
       [field]: value
-    }))
+    }
+    setAnswers(newAnswers)
+
+    // Save to localStorage whenever answers change
+    localStorage.setItem('questionnaire_further_questions', JSON.stringify(newAnswers))
   }
 
   useEffect(() => {
@@ -95,6 +99,12 @@ export default function FurtherQuestionsPage() {
     } else {
       // If no basic info, redirect back to basic info page
       router.push('/questionnaire/basic-info')
+    }
+
+    // Load further questions answers from localStorage
+    const storedAnswers = localStorage.getItem('questionnaire_further_questions')
+    if (storedAnswers) {
+      setAnswers(JSON.parse(storedAnswers))
     }
   }, [router])
 
@@ -214,6 +224,9 @@ export default function FurtherQuestionsPage() {
 
     setIsGeneratingReport(true)
 
+    // Save answers to localStorage before generating report
+    localStorage.setItem('questionnaire_further_questions', JSON.stringify(answers))
+
     try {
       const response = await fetch('/api/groq/report', {
         method: 'POST',
@@ -232,11 +245,15 @@ export default function FurtherQuestionsPage() {
       const data = await response.json()
 
       if (data.success) {
-        setReport({
+        const reportData = {
           content: data.report.content,
           generatedAt: data.report.generatedAt
-        })
+        }
+        setReport(reportData)
         setShowReport(true)
+
+        // Store report in localStorage for timeline page access
+        localStorage.setItem('ai_generated_timeline_report', JSON.stringify(reportData))
       } else {
         console.error('Failed to generate report:', data.error)
       }
@@ -318,7 +335,14 @@ export default function FurtherQuestionsPage() {
                     }}
                   />
                 </div>
-                <div className="mt-6 flex justify-center">
+                <div className="mt-6 flex justify-center gap-4">
+                  <Button
+                    onClick={() => router.push('/timeline')}
+                    className="bg-accent hover:bg-accent/90 text-accent-foreground"
+                  >
+                    <Calendar className="w-4 h-4 mr-2" />
+                    View Timeline
+                  </Button>
                   <Button
                     onClick={() => setShowReport(false)}
                     variant="outline"
