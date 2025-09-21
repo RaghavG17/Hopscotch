@@ -8,9 +8,10 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Label } from "@/components/ui/label"
-import { Calendar, User, ArrowRight, Heart, Briefcase, Home, Star, GraduationCap, Baby, Users, Plane } from "lucide-react"
+import { Calendar, User, ArrowRight, Heart, Briefcase, Home, Star, GraduationCap, Baby, Users, Plane, Loader2 } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
+import { useAuth } from "@/lib/auth-context"
 
 interface BasicInfoData {
     name: string
@@ -35,6 +36,7 @@ interface BasicInfoData {
 
 export default function BasicInfoPage() {
     const router = useRouter()
+    const { currentUser, loading } = useAuth()
     const [answers, setAnswers] = useState<BasicInfoData>({
         name: "",
         age: "",
@@ -55,6 +57,14 @@ export default function BasicInfoPage() {
         location: "",
         occupation: "",
     })
+    const [isSaving, setIsSaving] = useState(false)
+
+    // Redirect if not authenticated
+    useEffect(() => {
+        if (!loading && !currentUser) {
+            router.push('/')
+        }
+    }, [currentUser, loading, router])
 
     const handleInputChange = (field: keyof BasicInfoData, value: string) => {
         const newAnswers = {
@@ -86,11 +96,40 @@ export default function BasicInfoPage() {
         return requiredFields.every((field) => field !== "")
     }
 
-    const handleNext = () => {
-        if (isFormValid()) {
-            // Store basic info in localStorage for now
-            localStorage.setItem('questionnaire_basic_info', JSON.stringify(answers))
-            router.push('/questionnaire/further-questions')
+    const handleNext = async () => {
+        if (isFormValid() && currentUser) {
+            setIsSaving(true)
+            try {
+                // Save questionnaire data to database
+                const response = await fetch('/api/questionnaire', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        firebaseUid: currentUser.uid,
+                        questionnaireData: answers
+                    }),
+                })
+
+                if (response.ok) {
+                    // Store in localStorage as backup
+                    localStorage.setItem('questionnaire_basic_info', JSON.stringify(answers))
+                    router.push('/questionnaire/further-questions')
+                } else {
+                    console.error('Failed to save questionnaire data')
+                    // Still proceed to next step even if save fails
+                    localStorage.setItem('questionnaire_basic_info', JSON.stringify(answers))
+                    router.push('/questionnaire/further-questions')
+                }
+            } catch (error) {
+                console.error('Error saving questionnaire data:', error)
+                // Still proceed to next step even if save fails
+                localStorage.setItem('questionnaire_basic_info', JSON.stringify(answers))
+                router.push('/questionnaire/further-questions')
+            } finally {
+                setIsSaving(false)
+            }
         }
     }
 
@@ -404,11 +443,20 @@ export default function BasicInfoPage() {
                             <Button
                                 onClick={handleNext}
                                 size="lg"
-                                disabled={!isFormValid()}
+                                disabled={!isFormValid() || isSaving}
                                 className="px-12 py-4 text-lg shadow-lg disabled:opacity-50"
                             >
-                                Continue to Next Step
-                                <ArrowRight className="w-5 h-5 ml-2" />
+                                {isSaving ? (
+                                    <>
+                                        <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                                        Saving...
+                                    </>
+                                ) : (
+                                    <>
+                                        Continue to Next Step
+                                        <ArrowRight className="w-5 h-5 ml-2" />
+                                    </>
+                                )}
                             </Button>
                             <p className="text-sm text-muted-foreground mt-4">
                                 All fields are required to continue
