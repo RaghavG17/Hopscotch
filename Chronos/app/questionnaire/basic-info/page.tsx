@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -62,11 +62,23 @@ export default function BasicInfoPage() {
     })
 
     const handleInputChange = (field: keyof BasicInfoData, value: string) => {
-        setAnswers((prev) => ({
-            ...prev,
+        const newAnswers = {
+            ...answers,
             [field]: value,
-        }))
+        }
+        setAnswers(newAnswers)
+
+        // Auto-save to localStorage whenever answers change
+        localStorage.setItem('questionnaire_basic_info', JSON.stringify(newAnswers))
     }
+
+    // Load saved data when component mounts
+    useEffect(() => {
+        const savedAnswers = localStorage.getItem('questionnaire_basic_info')
+        if (savedAnswers) {
+            setAnswers(JSON.parse(savedAnswers))
+        }
+    }, [])
 
     const isFormValid = () => {
         const requiredFields = [

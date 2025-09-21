@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { AuthModal } from "@/components/auth/auth-modal"
 import { SimpleUserMenu } from "@/components/auth/simple-user-menu"
+import { Navbar } from "@/components/ui/navbar"
 import { useAuth } from "@/lib/auth-context"
 import {
   ArrowRight,
