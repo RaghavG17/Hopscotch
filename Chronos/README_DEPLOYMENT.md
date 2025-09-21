@@ -37,10 +37,10 @@ cd Chronos
 npm install
 ```
 
-### **Step 3: Configure API Keys**
+### **Step 3: Configure API Keys (AUTOMATIC)**
 ```bash
-cp .env.example .env.local
-# The .env.local file already contains the shared API keys - no editing needed!
+npm run setup
+# This automatically creates .env.local with all the shared API keys!
 ```
 
 ### **Step 4: Run the App**
