@@ -12,6 +12,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
 import { Plus, Upload, Sparkles, Target, Clock, Edit3, Save, X, ChevronDown, ChevronUp } from "lucide-react"
 import { Navbar } from "@/components/ui/navbar"
+import {useUserProgress } from "@/context/UserProgressContext";
 
 interface Milestone {
   id: string
@@ -486,6 +487,8 @@ export default function TimelinePage() {
 
 // MilestoneModal component
 function MilestoneModal({ milestone, onEdit }: { milestone: Milestone; onEdit: () => void }) {
+  const { completedTasks, toggleTask } = useUserProgress()
+  
   return (
     <DialogContent className="max-w-3xl p-10">
       <DialogHeader>
@@ -518,11 +521,23 @@ function MilestoneModal({ milestone, onEdit }: { milestone: Milestone; onEdit: (
               <span>Short Term Goals</span>
             </h4>
             <div className="space-y-2">
-              {milestone.shortTermGoals.map((goal, index) => (
-                <Badge key={index} variant="secondary" className="mr-2 mb-2 text-sm px-3 py-1">
-                  {goal}
-                </Badge>
-              ))}
+              {milestone.shortTermGoals.map((goal, index) => {
+                const taskId = `${milestone.id}-short-${index}`
+
+                return (
+                  <div key={taskId} className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      checked={!!completedTasks[taskId]}
+                      onChange={() => toggleTask(taskId, goal)} // Pass the goal title
+                      className="w-4 h-4 accent-accent"
+                    />
+                    <span className={completedTasks[taskId] ? "line-through text-gray-400" : ""}>
+                      {goal}
+                    </span>
+                  </div>
+                )
+              })}
             </div>
           </div>
 
@@ -532,11 +547,24 @@ function MilestoneModal({ milestone, onEdit }: { milestone: Milestone; onEdit: (
               <span>Long Term Goals</span>
             </h4>
             <div className="space-y-2">
-              {milestone.longTermGoals.map((goal, index) => (
-                <Badge key={index} variant="outline" className="mr-2 mb-2 text-sm px-3 py-1">
-                  {goal}
-                </Badge>
-              ))}
+              {/* Fixed: Now mapping over longTermGoals instead of shortTermGoals */}
+              {milestone.longTermGoals.map((goal, index) => {
+                const taskId = `${milestone.id}-long-${index}`
+
+                return (
+                  <div key={taskId} className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      checked={!!completedTasks[taskId]}
+                      onChange={() => toggleTask(taskId, goal)}
+                      className="w-4 h-4 accent-accent"
+                    />
+                    <span className={completedTasks[taskId] ? "line-through text-gray-400" : ""}>
+                      {goal}
+                    </span>
+                  </div>
+                )
+              })}
             </div>
           </div>
         </div>
