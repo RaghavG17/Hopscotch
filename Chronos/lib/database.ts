@@ -171,7 +171,7 @@ export const dbService = {
 
   getUserByFirebaseUid: (firebaseUid: string) => {
     const stmt = db.prepare('SELECT * FROM users WHERE firebase_uid = ?');
-    return stmt.get(firebaseUid);
+    return stmt.get(firebaseUid) as any;
   },
 
   updateUser: (firebaseUid: string, displayName?: string, photoUrl?: string) => {
