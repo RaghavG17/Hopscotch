@@ -6,18 +6,15 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Label } from "@/components/ui/label"
-import { Calendar, User, MapPin, ArrowRight, Heart, Briefcase, Home, Star, GraduationCap, Baby, Users, Plane } from "lucide-react"
+import { Calendar, User, ArrowRight, Heart, Briefcase, Home, Star, GraduationCap, Baby, Users, Plane } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 
 interface BasicInfoData {
     name: string
     age: string
-    journeyStage: string
-    journeyStageOther: string
     // Education details
     graduation: string
     schoolName: string
@@ -41,8 +38,6 @@ export default function BasicInfoPage() {
     const [answers, setAnswers] = useState<BasicInfoData>({
         name: "",
         age: "",
-        journeyStage: "",
-        journeyStageOther: "",
         // Education details
         graduation: "",
         schoolName: "",
@@ -405,64 +400,6 @@ export default function BasicInfoPage() {
                             </CardContent>
                         </Card>
 
-                        {/* Current Journey Stage */}
-                        <Card className="border-2 border-accent/10 shadow-lg">
-                            <CardHeader>
-                                <CardTitle className="flex items-center text-2xl">
-                                    <MapPin className="w-6 h-6 mr-3 text-accent" />
-                                    Where You Are Now
-                                </CardTitle>
-                            </CardHeader>
-                            <CardContent className="space-y-6">
-                                <div className="space-y-4">
-                                    <Label className="text-lg font-medium">Where are you in your journey right now?</Label>
-                                    <RadioGroup
-                                        value={answers.journeyStage}
-                                        onValueChange={(value) => {
-                                            handleInputChange("journeyStage", value)
-                                            if (value !== "Other") {
-                                                handleInputChange("journeyStageOther", "")
-                                            }
-                                        }}
-                                        className="space-y-3"
-                                    >
-                                        {[
-                                            "High school / College",
-                                            "Starting my career",
-                                            "Growing in my career",
-                                            "Established in my career",
-                                            "Focused more on personal life than work",
-                                        ].map((option) => (
-                                            <div
-                                                key={option}
-                                                className="flex items-center space-x-3 p-4 rounded-lg border hover:bg-accent/5 transition-colors"
-                                            >
-                                                <RadioGroupItem value={option} id={`journey-${option}`} />
-                                                <Label htmlFor={`journey-${option}`} className="flex-1 cursor-pointer font-medium">
-                                                    {option}
-                                                </Label>
-                                            </div>
-                                        ))}
-                                        <div className="flex items-center space-x-3 p-4 rounded-lg border hover:bg-accent/5 transition-colors">
-                                            <RadioGroupItem value="Other" id="journey-other" />
-                                            <Label htmlFor="journey-other" className="cursor-pointer font-medium">
-                                                Other:
-                                            </Label>
-                                        </div>
-                                        {answers.journeyStage === "Other" && (
-                                            <div className="ml-8 mt-2">
-                                                <Input
-                                                    placeholder="Please specify..."
-                                                    value={answers.journeyStageOther}
-                                                    onChange={(e) => handleInputChange("journeyStageOther", e.target.value)}
-                                                    className="text-lg py-3 border-2 focus:border-accent/50"
-                                                />
-                                            </div>
-                                        )}
-                                    </RadioGroup>
-                                </div>
-                            </CardContent>
-                        </Card>
 
                         <div className="text-center pt-8">
                             <Button

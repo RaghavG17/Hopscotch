@@ -81,9 +81,9 @@ export default function LandingPage() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               {currentUser ? (
-                <Link href="/dashboard">
+                <Link href="/timeline">
                   <Button size="lg" className="text-lg px-8 py-6">
-                    Go to Dashboard
+                    Go to Timeline
                     <ArrowRight className="ml-2 w-5 h-5" />
                   </Button>
                 </Link>
@@ -248,7 +248,7 @@ export default function LandingPage() {
             Chronos.
           </p>
           {currentUser ? (
-            <Link href="/dashboard">
+            <Link href="/timeline">
               <Button size="lg" variant="secondary" className="text-lg px-8 py-6">
                 Start Building Your Timeline
                 <ArrowRight className="ml-2 w-5 h-5" />
