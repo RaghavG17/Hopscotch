@@ -40,7 +40,7 @@ npm install
 ### **Step 3: Configure API Keys**
 ```bash
 cp .env.example .env.local
-# Edit .env.local and add your API keys
+# The .env.local file already contains the shared API keys - no editing needed!
 ```
 
 ### **Step 4: Run the App**
