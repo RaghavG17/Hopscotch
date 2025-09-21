@@ -22,9 +22,7 @@ import {
   Target,
   Calendar,
 } from "lucide-react";
-import { Navbar } from "@/components/ui/navbar";
-import { AuthModal } from "@/components/auth/auth-modal";
-import { SimpleUserMenu } from "@/components/auth/simple-user-menu";
+import { AppNavbar } from "@/components/ui/app-navbar";
 import { useAuth } from "@/lib/auth-context";
 
 interface Friend {
@@ -42,7 +40,6 @@ interface Friend {
 export default function FriendsPage() {
   const { currentUser } = useAuth();
   const [searchQuery, setSearchQuery] = useState("");
-  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [friends] = useState<Friend[]>([
     {
       id: "1",
@@ -97,41 +94,7 @@ export default function FriendsPage() {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <a href="/" className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
-            <div className="w-8 h-8 bg-accent rounded-lg flex items-center justify-center">
-              <Calendar className="w-5 h-5 text-accent-foreground" />
-            </div>
-            <span className="text-xl font-bold text-foreground">Chronos</span>
-          </a>
-          <nav className="hidden md:flex items-center space-x-6">
-            <a href="/timeline" className="text-muted-foreground hover:text-foreground transition-colors">
-              Timeline
-            </a>
-            <a href="/friends" className="text-foreground font-medium">
-              Friends
-            </a>
-            <a href="/achievements" className="text-muted-foreground hover:text-foreground transition-colors">
-              Achievements
-            </a>
-          </nav>
-          <div className="flex items-center space-x-4">
-            {/* Authentication */}
-            {currentUser ? (
-              <SimpleUserMenu />
-            ) : (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setIsAuthModalOpen(true)}
-              >
-                Sign In
-              </Button>
-            )}
-          </div>
-        </div>
-      </header>
+      <AppNavbar />
 
       {/* Friends Section */}
       <section className="py-12">
@@ -307,11 +270,6 @@ export default function FriendsPage() {
         </div>
       </section>
 
-      {/* Auth Modal */}
-      <AuthModal
-        isOpen={isAuthModalOpen}
-        onClose={() => setIsAuthModalOpen(false)}
-      />
     </div>
   );
 }
