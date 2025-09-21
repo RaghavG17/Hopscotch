@@ -23,6 +23,11 @@ export function SimpleUserMenu() {
         setShowMenu(false);
     };
 
+    const handleSettingsClick = () => {
+        router.push('/settings');
+        setShowMenu(false);
+    };
+
     const handleLogout = async () => {
         try {
             setLoading(true);
@@ -89,7 +94,10 @@ export function SimpleUserMenu() {
                             <User className="mr-2 h-4 w-4" />
                             Profile
                         </button>
-                        <button className="w-full px-3 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center">
+                        <button
+                            onClick={handleSettingsClick}
+                            className="w-full px-3 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center"
+                        >
                             <Settings className="mr-2 h-4 w-4" />
                             Settings
                         </button>

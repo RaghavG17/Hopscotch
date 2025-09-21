@@ -11,11 +11,9 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
 import { Plus, Sparkles, Target, Clock, Edit3, Save, X, ChevronDown, ChevronUp, Trophy, Calendar, Edit, Check } from "lucide-react"
-import { Navbar } from "@/components/ui/navbar"
-import { AuthModal } from "@/components/auth/auth-modal"
-import { SimpleUserMenu } from "@/components/auth/simple-user-menu"
+import { AppNavbar } from "@/components/ui/app-navbar"
 import { useAuth } from "@/lib/auth-context"
-import {useUserProgress } from "@/context/UserProgressContext";
+import { useUserProgress } from "@/context/UserProgressContext";
 import { CalendarModal } from "@/components/calendar"
 
 interface Milestone {
@@ -122,7 +120,6 @@ export default function TimelinePage() {
   const [viewMode, setViewMode] = useState<"yearly" | "monthly">("yearly")
   const [aiReport, setAiReport] = useState<{ content: string; generatedAt: string } | null>(null)
   const [isGenerating, setIsGenerating] = useState(false)
-  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false)
   const [isCalendarOpen, setIsCalendarOpen] = useState(false)
   const [selectedMilestone, setSelectedMilestone] = useState<Milestone | null>(null)
   
@@ -495,64 +492,32 @@ export default function TimelinePage() {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <div className="relative">
-        <header className="border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50">
-          <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-            <a href="/" className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
-              <div className="w-8 h-8 bg-accent rounded-lg flex items-center justify-center">
-                <Calendar className="w-5 h-5 text-accent-foreground" />
-              </div>
-              <span className="text-xl font-bold text-foreground">Chronos</span>
-            </a>
-            <nav className="hidden md:flex items-center space-x-6">
-              <a href="/timeline" className="text-foreground font-medium">
-                Timeline
-              </a>
-              <a href="/friends" className="text-muted-foreground hover:text-foreground transition-colors">
-                Friends
-              </a>
-              <a href="/achievements" className="text-muted-foreground hover:text-foreground transition-colors">
-                Achievements
-              </a>
-            </nav>
-            <div className="flex items-center space-x-4">
-              {/* View Mode Toggle */}
-              <Button
-                onClick={() => setViewMode(viewMode === "yearly" ? "monthly" : "yearly")}
-                variant="outline"
-                size="sm"
-                className="group hover:shadow-lg transition-all duration-300 px-4 py-2"
-              >
-                <div className="flex items-center space-x-2">
-                  {viewMode === "yearly" ? (
-                    <>
-                      <ChevronDown className="w-4 h-4 group-hover:translate-y-0.5 transition-transform" />
-                      <span className="text-sm font-medium">Monthly View</span>
-                    </>
-                  ) : (
-                    <>
-                      <ChevronUp className="w-4 h-4 group-hover:-translate-y-0.5 transition-transform" />
-                      <span className="text-sm font-medium">Yearly View</span>
-                    </>
-                  )}
-                </div>
-              </Button>
+      <AppNavbar />
 
-              {/* Authentication */}
-              {currentUser ? (
-                <SimpleUserMenu />
+      <div className="relative">
+        <div className="container mx-auto px-4 py-4 flex items-center justify-end">
+          {/* View Mode Toggle */}
+          <Button
+            onClick={() => setViewMode(viewMode === "yearly" ? "monthly" : "yearly")}
+            variant="outline"
+            size="sm"
+            className="group hover:shadow-lg transition-all duration-300 px-4 py-2"
+          >
+            <div className="flex items-center space-x-2">
+              {viewMode === "yearly" ? (
+                <>
+                  <ChevronDown className="w-4 h-4 group-hover:translate-y-0.5 transition-transform" />
+                  <span className="text-sm font-medium">Monthly View</span>
+                </>
               ) : (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setIsAuthModalOpen(true)}
-                >
-                  Sign In
-                </Button>
+                <>
+                  <ChevronUp className="w-4 h-4 group-hover:-translate-y-0.5 transition-transform" />
+                  <span className="text-sm font-medium">Yearly View</span>
+                </>
               )}
             </div>
-          </div>
-        </header>
+          </Button>
+        </div>
       </div>
 
       {/* Timeline Section */}
@@ -666,7 +631,7 @@ export default function TimelinePage() {
                             <MilestoneModal milestone={milestone} onEdit={() => handleEditMilestone(milestone)} />
                           </Dialog>
                         ) : (
-                          <Card 
+                          <Card
                             className="w-44 h-44 cursor-pointer hover:shadow-2xl transition-all duration-300 group relative overflow-hidden border-2 border-border hover:border-accent"
                             onClick={() => {
                               setSelectedMilestone(milestone)
@@ -932,16 +897,11 @@ export default function TimelinePage() {
         </DialogContent>
       </Dialog>
 
-      {/* Auth Modal */}
-      <AuthModal
-        isOpen={isAuthModalOpen}
-        onClose={() => setIsAuthModalOpen(false)}
-      />
 
       {/* Calendar Modal for Monthly Milestones */}
-      <CalendarModal 
-        isOpen={isCalendarOpen} 
-        onClose={() => setIsCalendarOpen(false)} 
+      <CalendarModal
+        isOpen={isCalendarOpen}
+        onClose={() => setIsCalendarOpen(false)}
       />
     </div>
   )
@@ -950,7 +910,7 @@ export default function TimelinePage() {
 // MilestoneModal component
 function MilestoneModal({ milestone, onEdit }: { milestone: Milestone; onEdit: () => void }) {
   const { completedTasks, toggleTask } = useUserProgress()
-  
+
   return (
     <DialogContent className="max-w-3xl p-10">
       <DialogHeader>

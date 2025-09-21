@@ -6,9 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Navbar } from "@/components/ui/navbar";
-import { AuthModal } from "@/components/auth/auth-modal";
-import { SimpleUserMenu } from "@/components/auth/simple-user-menu";
+import { AppNavbar } from "@/components/ui/app-navbar";
 import { useAuth } from "@/lib/auth-context";
 import { useUserProgress, ACHIEVEMENTS } from "@/context/UserProgressContext";
 
@@ -43,14 +41,13 @@ interface Achievement {
 export default function AchievementsPage() {
   const { currentUser } = useAuth();
   const [activeTab, setActiveTab] = useState("all");
-  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const { unlockedAchievements, getAchievementProgress } = useUserProgress();
   const progress = getAchievementProgress();
 
   const achievements: Achievement[] = ACHIEVEMENTS.map((achievement) => ({
     ...achievement,
     icon: (
-      <Image 
+      <Image
         src={`/${achievement.title.toLowerCase().replace(/\s+/g, '')}.png`}
         alt={achievement.title}
         width={64}
@@ -74,7 +71,7 @@ export default function AchievementsPage() {
   //fall back when icons fail to load
   const getFallbackIcon = (category: string, rarity: string) => {
     const iconClass = "w-10 h-10";
-    
+
     switch (category) {
       case "milestone":
         return rarity === "legendary" ? <Crown className={iconClass} /> : <Target className={iconClass} />;
@@ -117,41 +114,7 @@ export default function AchievementsPage() {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <a href="/" className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
-            <div className="w-8 h-8 bg-accent rounded-lg flex items-center justify-center">
-              <Calendar className="w-5 h-5 text-accent-foreground" />
-            </div>
-            <span className="text-xl font-bold text-foreground">Chronos</span>
-          </a>
-          <nav className="hidden md:flex items-center space-x-6">
-            <a href="/timeline" className="text-muted-foreground hover:text-foreground transition-colors">
-              Timeline
-            </a>
-            <a href="/friends" className="text-muted-foreground hover:text-foreground transition-colors">
-              Friends
-            </a>
-            <a href="/achievements" className="text-foreground font-medium">
-              Achievements
-            </a>
-          </nav>
-          <div className="flex items-center space-x-4">
-            {/* Authentication */}
-            {currentUser ? (
-              <SimpleUserMenu />
-            ) : (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setIsAuthModalOpen(true)}
-              >
-                Sign In
-              </Button>
-            )}
-          </div>
-        </div>
-      </header>
+      <AppNavbar />
 
       {/* Achievements Section */}
       <section className="py-12">
@@ -225,11 +188,10 @@ export default function AchievementsPage() {
                 {filteredAchievements.map((achievement) => (
                   <Card
                     key={achievement.id}
-                    className={`relative overflow-hidden transition-all duration-300 ${
-                      achievement.isUnlocked
-                        ? "hover:shadow-lg border-accent/20 bg-gradient-to-br from-background to-accent/5"
-                        : "opacity-75 hover:opacity-90 bg-muted/50"
-                    }`}
+                    className={`relative overflow-hidden transition-all duration-300 ${achievement.isUnlocked
+                      ? "hover:shadow-lg border-accent/20 bg-gradient-to-br from-background to-accent/5"
+                      : "opacity-75 hover:opacity-90 bg-muted/50"
+                      }`}
                   >
                     {!achievement.isUnlocked && (
                       <div className="absolute top-2 right-2 z-10">
@@ -318,11 +280,6 @@ export default function AchievementsPage() {
         </div>
       </section>
 
-      {/* Auth Modal */}
-      <AuthModal
-        isOpen={isAuthModalOpen}
-        onClose={() => setIsAuthModalOpen(false)}
-      />
     </div>
   );
 }

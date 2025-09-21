@@ -9,9 +9,10 @@ import { Textarea } from "@/components/ui/textarea"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
-import { Calendar, CheckCircle, Sparkles, Target, Clock, Heart, Trophy, ArrowLeft, User, Briefcase, Users, Brain, BookOpen, MessageCircle, Plus, Minus, ChevronDown, ChevronUp } from "lucide-react"
+import { Calendar, CheckCircle, Sparkles, Target, Clock, Heart, Trophy, ArrowLeft, User, Briefcase, Users, Brain, BookOpen, MessageCircle, Plus, Minus, ChevronDown, ChevronUp, Loader2 } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
+import { useAuth } from "@/lib/auth-context"
 
 interface BasicInfoData {
   name: string
@@ -49,6 +50,7 @@ interface FurtherQuestionsData {
 
 export default function FurtherQuestionsPage() {
   const router = useRouter()
+  const { currentUser, loading } = useAuth()
   const [basicInfo, setBasicInfo] = useState<BasicInfoData | null>(null)
   const [answers, setAnswers] = useState<FurtherQuestionsData>({
     // Personal Growth
@@ -80,6 +82,7 @@ export default function FurtherQuestionsPage() {
   const [isGeneratingReport, setIsGeneratingReport] = useState(false)
   const [report, setReport] = useState<{ content: string; generatedAt: string } | null>(null)
   const [showReport, setShowReport] = useState(false)
+  const [isCreatingTimeline, setIsCreatingTimeline] = useState(false)
   const handleInputChange = (field: keyof FurtherQuestionsData, value: string) => {
     const newAnswers = {
       ...answers,
@@ -92,6 +95,12 @@ export default function FurtherQuestionsPage() {
   }
 
   useEffect(() => {
+    // Redirect if not authenticated
+    if (!loading && !currentUser) {
+      router.push('/')
+      return
+    }
+
     // Load basic info from localStorage
     const storedBasicInfo = localStorage.getItem('questionnaire_basic_info')
     if (storedBasicInfo) {
@@ -106,7 +115,7 @@ export default function FurtherQuestionsPage() {
     if (storedAnswers) {
       setAnswers(JSON.parse(storedAnswers))
     }
-  }, [router])
+  }, [router, currentUser, loading])
 
 
 
@@ -209,14 +218,120 @@ export default function FurtherQuestionsPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!isFormValid()) return
+    if (!isFormValid() || !currentUser) return
 
     setIsSubmitting(true)
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 2000))
-    console.log("Questionnaire completed:", { basicInfo, answers })
-    setIsComplete(true)
-    setIsSubmitting(false)
+    setIsCreatingTimeline(true)
+
+    try {
+      // Save further questions data to database
+      const response = await fetch('/api/questionnaire', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          firebaseUid: currentUser.uid,
+          questionnaireData: {
+            ...basicInfo,
+            ...answers
+          }
+        }),
+      })
+
+      if (response.ok) {
+        // Generate AI report and create timeline
+        await generateReportAndCreateTimeline()
+      } else {
+        console.error('Failed to save questionnaire data')
+        // Still proceed with timeline creation
+        await generateReportAndCreateTimeline()
+      }
+    } catch (error) {
+      console.error('Error saving questionnaire data:', error)
+      // Still proceed with timeline creation
+      await generateReportAndCreateTimeline()
+    } finally {
+      setIsSubmitting(false)
+      setIsCreatingTimeline(false)
+    }
+  }
+
+  const generateReportAndCreateTimeline = async () => {
+    if (!basicInfo || !currentUser) return
+
+    setIsGeneratingReport(true)
+
+    try {
+      // Generate AI report
+      const response = await fetch('/api/groq/report', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId: currentUser.uid,
+          questionnaireData: {
+            basicInfo,
+            furtherQuestions: answers
+          }
+        }),
+      })
+
+      const data = await response.json()
+
+      if (data.success) {
+        const reportData = {
+          content: data.report.content,
+          generatedAt: data.report.generatedAt
+        }
+
+        // Store report in localStorage for timeline page access
+        localStorage.setItem('ai_generated_timeline_report', JSON.stringify(reportData))
+
+        // Create timeline in database
+        await createTimelineFromReport(reportData)
+
+        // Redirect to timeline page
+        router.push('/timeline')
+      } else {
+        console.error('Failed to generate report:', data.error)
+        // Still redirect to timeline page
+        router.push('/timeline')
+      }
+    } catch (error) {
+      console.error('Error generating report:', error)
+      // Still redirect to timeline page
+      router.push('/timeline')
+    } finally {
+      setIsGeneratingReport(false)
+    }
+  }
+
+  const createTimelineFromReport = async (reportData: any) => {
+    try {
+      // Create timeline via API
+      const timelineResponse = await fetch('/api/timelines', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          firebaseUid: currentUser?.uid,
+          title: 'My AI-Generated Timeline',
+          description: 'Timeline created from questionnaire responses',
+          isPublic: false
+        }),
+      })
+
+      if (timelineResponse.ok) {
+        console.log('Timeline created successfully')
+      } else {
+        console.error('Failed to create timeline')
+      }
+    } catch (error) {
+      console.error('Error creating timeline:', error)
+    }
   }
 
   const generateReport = async () => {
@@ -234,7 +349,7 @@ export default function FurtherQuestionsPage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          userId: '4', // Using test user ID
+          userId: currentUser?.uid || '4', // Use current user ID or fallback
           questionnaireData: {
             basicInfo,
             furtherQuestions: answers
@@ -262,6 +377,17 @@ export default function FurtherQuestionsPage() {
     } finally {
       setIsGeneratingReport(false)
     }
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-accent/10 via-background to-secondary/10 flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="w-8 h-8 animate-spin text-accent mx-auto" />
+          <p className="mt-4 text-lg text-muted-foreground">Loading...</p>
+        </div>
+      </div>
+    )
   }
 
   if (!basicInfo) {
@@ -750,12 +876,12 @@ export default function FurtherQuestionsPage() {
               <Button
                 type="submit"
                 size="lg"
-                disabled={!isFormValid() || isSubmitting}
+                disabled={!isFormValid() || isSubmitting || isCreatingTimeline}
                 className="px-12 py-4 text-lg shadow-lg disabled:opacity-50"
               >
-                {isSubmitting ? (
+                {isSubmitting || isCreatingTimeline ? (
                   <>
-                    <Sparkles className="w-5 h-5 mr-2 animate-spin" />
+                    <Loader2 className="w-5 h-5 mr-2 animate-spin" />
                     Creating Your Timeline...
                   </>
                 ) : (
