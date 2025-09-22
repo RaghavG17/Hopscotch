@@ -3,90 +3,77 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Cherry blossom inspired color palette with soft light pinks */
 :root {
-  /* Updated color palette for life timeline app branding */
-  --background: oklch(1 0 0);
-  /* Pure white background */
-  --foreground: oklch(0.205 0 0);
-  /* Dark gray-800 equivalent for text */
-  --card: oklch(0.97 0.005 240);
-  /* Light gray-50 equivalent for cards */
-  --card-foreground: oklch(0.205 0 0);
-  /* Dark text on cards */
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.205 0 0);
-  --primary: oklch(0.205 0 0);
-  /* Dark gray-800 for primary buttons */
-  --primary-foreground: oklch(1 0 0);
-  /* White text on primary */
-  --secondary: oklch(0.646 0.162 293.89);
-  /* Purple-500 equivalent for accents */
-  --secondary-foreground: oklch(1 0 0);
-  /* White text on secondary */
-  --muted: oklch(0.97 0.005 240);
-  /* Light muted background */
-  --muted-foreground: oklch(0.556 0.016 252.89);
-  /* Gray-500 equivalent */
-  --accent: oklch(0.646 0.162 293.89);
-  /* Purple accent color */
-  --accent-foreground: oklch(1 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(1 0 0);
-  --border: oklch(0.922 0.013 252.89);
-  /* Light gray border */
-  --input: oklch(1 0 0);
-  --ring: oklch(0.646 0.162 293.89);
-  /* Purple focus ring */
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --radius: 0.5rem;
-  /* Slightly smaller radius for modern look */
-  --sidebar: oklch(1 0 0);
-  --sidebar-foreground: oklch(0.205 0 0);
-  --sidebar-primary: oklch(0.646 0.162 293.89);
-  --sidebar-primary-foreground: oklch(1 0 0);
-  --sidebar-accent: oklch(0.97 0.005 240);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0.013 252.89);
-  --sidebar-ring: oklch(0.646 0.162 293.89);
+  /* Cherry blossom inspired palette - soft, dreamy, and minimal */
+  --background: #fefcfc; /* Soft white with hint of pink */
+  --foreground: #4a4a4a; /* Warm dark gray for readability */
+  --card: #fdf7f7; /* Very light blush pink for cards */
+  --card-foreground: #4a4a4a;
+  --popover: #fefcfc;
+  --popover-foreground: #4a4a4a;
+  --primary: #f8a5a5; /* Soft cherry blossom pink */
+  --primary-foreground: #ffffff;
+  --secondary: #fde2e7; /* Light cherry blossom pink */
+  --secondary-foreground: #4a4a4a;
+  --muted: #fdf2f4; /* Subtle pink muted background */
+  --muted-foreground: #6b7280;
+  --accent: #f8a5c2; /* Cherry blossom accent */
+  --accent-foreground: #ffffff;
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  --border: #f3e8eb; /* Soft pink border */
+  --input: #fefcfc;
+  --ring: #f8a5c2; /* Cherry blossom focus ring */
+  --chart-1: #f8a5c2;
+  --chart-2: #fde2e7;
+  --chart-3: #fdf2f4;
+  --chart-4: #f3e8eb;
+  --chart-5: #fef7f8;
+  --radius: 0.75rem; /* Softer, more rounded corners */
+  --sidebar: #fefcfc;
+  --sidebar-foreground: #4a4a4a;
+  --sidebar-primary: #f8a5c2;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #fdf2f4;
+  --sidebar-accent-foreground: #4a4a4a;
+  --sidebar-border: #f3e8eb;
+  --sidebar-ring: #f8a5c2;
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.145 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.145 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.985 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.646 0.162 293.89);
-  --secondary-foreground: oklch(1 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.646 0.162 293.89);
-  --accent-foreground: oklch(1 0 0);
-  --destructive: oklch(0.396 0.141 25.723);
-  --destructive-foreground: oklch(0.637 0.237 25.331);
-  --border: oklch(0.269 0 0);
-  --input: oklch(0.269 0 0);
-  --ring: oklch(0.646 0.162 293.89);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.646 0.162 293.89);
-  --sidebar-primary-foreground: oklch(1 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(0.269 0 0);
-  --sidebar-ring: oklch(0.646 0.162 293.89);
+  --background: #1a1618; /* Dark with subtle pink undertone */
+  --foreground: #f9f7f8;
+  --card: #251e20; /* Dark cards with pink tint */
+  --card-foreground: #f9f7f8;
+  --popover: #251e20;
+  --popover-foreground: #f9f7f8;
+  --primary: #f8a5c2; /* Cherry blossom pink stays vibrant in dark */
+  --primary-foreground: #1a1618;
+  --secondary: #3d2a2f; /* Darker pink secondary */
+  --secondary-foreground: #f9f7f8;
+  --muted: #2d2225; /* Dark muted with pink tint */
+  --muted-foreground: #9ca3af;
+  --accent: #f8a5c2;
+  --accent-foreground: #1a1618;
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  --border: #3d2a2f; /* Dark borders with pink tint */
+  --input: #2d2225;
+  --ring: #f8a5c2;
+  --chart-1: #f8a5c2;
+  --chart-2: #fde2e7;
+  --chart-3: #fdf2f4;
+  --chart-4: #f3e8eb;
+  --chart-5: #fef7f8;
+  --sidebar: #1f1a1c;
+  --sidebar-foreground: #f9f7f8;
+  --sidebar-primary: #f8a5c2;
+  --sidebar-primary-foreground: #1a1618;
+  --sidebar-accent: #2d2225;
+  --sidebar-accent-foreground: #f9f7f8;
+  --sidebar-border: #3d2a2f;
+  --sidebar-ring: #f8a5c2;
 }
 
 @theme inline {
@@ -130,12 +117,87 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
+/* Adding subtle grain texture and base styles */
 @layer base {
   * {
-    @apply border-gray-200;
+    @apply border-border outline-ring/50;
   }
 
   body {
-    @apply bg-white text-gray-900;
+    @apply bg-background text-foreground;
+    /* Subtle grain texture overlay */
+    background-image: radial-gradient(circle at 1px 1px, rgba(248, 165, 194, 0.03) 1px, transparent 0);
+    background-size: 20px 20px;
+  }
+
+  /* Custom gradient utilities for cherry blossom theme */
+  .gradient-cherry-soft {
+    background: linear-gradient(135deg, #fef7f8 0%, #fde2e7 50%, #f8a5c2 100%);
+  }
+
+  .gradient-cherry-subtle {
+    background: linear-gradient(135deg, #fefcfc 0%, #fdf7f7 100%);
+  }
+
+  .gradient-cherry-accent {
+    background: linear-gradient(135deg, #f8a5c2 0%, #fde2e7 100%);
+  }
+
+  .gradient-cherry-accent-hover {
+    background: linear-gradient(135deg, #e895b2 0%, #f5d2d7 100%);
+  }
+
+  /* Soft shadow utilities for depth */
+  .shadow-cherry-soft {
+    box-shadow: 0 4px 20px rgba(248, 165, 194, 0.1);
+  }
+
+  .shadow-cherry-medium {
+    box-shadow: 0 8px 30px rgba(248, 165, 194, 0.15);
+  }
+
+  .shadow-cherry-glow {
+    box-shadow: 0 4px 20px rgba(248, 165, 194, 0.1);
+  }
+
+  .shadow-cherry-drop {
+    box-shadow: 0 12px 40px rgba(248, 165, 194, 0.25);
   }
 }
+
+/* Custom animations for playful interactions */
+@keyframes float-gentle {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes pulse-cherry {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+.animate-float-gentle {
+  animation: float-gentle 3s ease-in-out infinite;
+}
+
+  .animate-pulse-cherry {
+    animation: pulse-cherry 2s ease-in-out infinite;
+  }
+
+  /* Text gradient utilities for cherry blossom theme */
+  .text-gradient-cherry {
+    background: linear-gradient(135deg, #f8a5c2 0%, #fde2e7 50%, #f8a5c2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }

@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
         }
 
         const user = dbService.getUserByFirebaseUid(firebaseUid);
-        if (!user) {
+        if (!user || !user.id) {
             return NextResponse.json({ error: 'User not found' }, { status: 404 });
         }
 
@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
         }
 
         const user = dbService.getUserByFirebaseUid(firebaseUid);
-        if (!user) {
+        if (!user || !user.id) {
             return NextResponse.json({ error: 'User not found' }, { status: 404 });
         }
 

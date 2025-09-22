@@ -1,10 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { dbService } from '@/lib/database';
-import { auth } from '@/lib/firebase';
-import { getAuth } from 'firebase-admin/auth';
-
-// Note: This is a simplified version. In production, you'd want to use Firebase Admin SDK
-// For now, we'll handle this client-side with proper validation
 
 export async function GET(request: NextRequest) {
     try {
@@ -17,7 +12,7 @@ export async function GET(request: NextRequest) {
         }
 
         const user = dbService.getUserByFirebaseUid(firebaseUid);
-        if (!user) {
+        if (!user || !user.id) {
             return NextResponse.json({ error: 'User not found' }, { status: 404 });
         }
 
@@ -43,7 +38,7 @@ export async function POST(request: NextRequest) {
         }
 
         const user = dbService.getUserByFirebaseUid(firebaseUid);
-        if (!user) {
+        if (!user || !user.id) {
             return NextResponse.json({ error: 'User not found' }, { status: 404 });
         }
 

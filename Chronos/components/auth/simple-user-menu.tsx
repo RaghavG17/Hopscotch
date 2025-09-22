@@ -4,12 +4,29 @@ import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/lib/auth-context";
-import { LogOut, Settings, Calendar } from "lucide-react";
+import { LogOut, Settings, Calendar, User } from "lucide-react";
+import { useRouter } from 'next/navigation';
 
 export function SimpleUserMenu() {
     const { currentUser, logout } = useAuth();
+    const router = useRouter();
     const [loading, setLoading] = useState(false);
     const [showMenu, setShowMenu] = useState(false);
+
+    const handleTimelineClick = () => {
+        router.push('/timeline');
+        setShowMenu(false);
+    };
+
+    const handleProfileClick = () => {
+        router.push('/profile');
+        setShowMenu(false);
+    };
+
+    const handleSettingsClick = () => {
+        router.push('/settings');
+        setShowMenu(false);
+    };
 
     const handleLogout = async () => {
         try {
@@ -63,11 +80,24 @@ export function SimpleUserMenu() {
                     </div>
 
                     <div className="py-1">
-                        <button className="w-full px-3 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center">
+                        <button
+                            onClick={handleTimelineClick}
+                            className="w-full px-3 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center"
+                        >
                             <Calendar className="mr-2 h-4 w-4" />
                             My Timeline
                         </button>
-                        <button className="w-full px-3 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center">
+                        <button
+                            onClick={handleProfileClick}
+                            className="w-full px-3 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center"
+                        >
+                            <User className="mr-2 h-4 w-4" />
+                            Profile
+                        </button>
+                        <button
+                            onClick={handleSettingsClick}
+                            className="w-full px-3 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center"
+                        >
                             <Settings className="mr-2 h-4 w-4" />
                             Settings
                         </button>

@@ -70,8 +70,28 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-            <Card className="w-full max-w-md">
+        <div
+            className="fixed inset-0 bg-black/50 flex items-center justify-center z-[9999] p-4 min-h-screen"
+            style={{
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+            }}
+            onClick={(e) => {
+                if (e.target === e.currentTarget) {
+                    onClose();
+                }
+            }}
+        >
+            <Card
+                className="w-full max-w-md shadow-2xl"
+                onClick={(e) => e.stopPropagation()}
+            >
                 <CardHeader className="relative">
                     <button
                         onClick={onClose}
@@ -79,7 +99,7 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
                     >
                         <X className="w-5 h-5" />
                     </button>
-                    <CardTitle className="text-2xl text-center">Welcome to LifeLine</CardTitle>
+                    <CardTitle className="text-2xl text-center">Welcome to Hopscotch</CardTitle>
                     <CardDescription className="text-center">
                         Sign in to your account or create a new one
                     </CardDescription>

@@ -12,7 +12,7 @@ import {
 } from 'firebase/auth';
 import { auth } from './firebase';
 // Remove direct database import from client-side context
-import {useRouter } from "next/navigation"
+import { useRouter } from "next/navigation"
 
 interface AuthContextType {
     currentUser: User | null;
@@ -62,8 +62,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
 
     useEffect(() => {
-        if (!router) return;
-    
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
             setCurrentUser(user);
 
@@ -86,7 +84,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                     const data = await res.json();
 
                     //only if the user is new, we redirect them to questionaire
-                    if (data.isNewUser) {
+                    if (data.isNewUser && router) {
                         console.log("testing redirecting new user to questionnaire");
                         router.push("/questionnaire");
                     }
@@ -99,7 +97,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         });
 
         return unsubscribe;
-    }, [router]);
+    }, []); // Remove router dependency to prevent memory leaks
 
     const value: AuthContextType = {
         currentUser,
