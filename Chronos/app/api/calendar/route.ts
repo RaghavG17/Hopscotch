@@ -7,6 +7,7 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const action = searchParams.get('action');
     const accessToken = searchParams.get('accessToken');
+    const refreshToken = searchParams.get('refreshToken');
 
     if (!accessToken) {
       return NextResponse.json({ error: 'Access token required' }, { status: 401 });
@@ -21,6 +22,7 @@ export async function GET(request: NextRequest) {
 
     oauth2Client.setCredentials({
       access_token: accessToken,
+      refresh_token: refreshToken,
     });
 
     const calendar = google.calendar({ version: 'v3', auth: oauth2Client });
@@ -79,6 +81,15 @@ export async function GET(request: NextRequest) {
     }
   } catch (error) {
     console.error('Google Calendar API error:', error);
+
+    // If it's a 401 error, provide more specific guidance
+    if (error.code === 401) {
+      return NextResponse.json(
+        { error: 'Google Calendar authentication failed. Please reconnect your calendar.' },
+        { status: 401 }
+      );
+    }
+
     return NextResponse.json(
       { error: 'Failed to interact with Google Calendar' },
       { status: 500 }
@@ -136,6 +147,15 @@ export async function POST(request: NextRequest) {
     }
   } catch (error) {
     console.error('Google Calendar API error:', error);
+
+    // If it's a 401 error, provide more specific guidance
+    if (error.code === 401) {
+      return NextResponse.json(
+        { error: 'Google Calendar authentication failed. Please reconnect your calendar.' },
+        { status: 401 }
+      );
+    }
+
     return NextResponse.json(
       { error: 'Failed to interact with Google Calendar' },
       { status: 500 }

@@ -49,11 +49,40 @@ export function CalendarModal({ isOpen, onClose }: CalendarModalProps) {
     const checkConnection = async () => {
       if (!currentUser) return
 
-      const storedToken = localStorage.getItem("google_calendar_token")
-      if (storedToken) {
-        setAccessToken(storedToken)
-        setIsConnected(true)
-        await loadCalendarEvents(storedToken)
+      const storedAccessToken = localStorage.getItem("google_calendar_access_token")
+      const storedRefreshToken = localStorage.getItem("google_calendar_refresh_token")
+      const tokenExpiry = localStorage.getItem("google_calendar_token_expiry")
+
+      if (storedAccessToken) {
+        // Check if token is expired
+        const isExpired = tokenExpiry && Date.now() > parseInt(tokenExpiry)
+
+        if (isExpired && storedRefreshToken) {
+          // Try to refresh the token
+          try {
+            const refreshedToken = await refreshAccessToken(storedRefreshToken)
+            if (refreshedToken) {
+              setAccessToken(refreshedToken)
+              setIsConnected(true)
+              await loadCalendarEvents(refreshedToken)
+            } else {
+              // Refresh failed, clear tokens
+              localStorage.removeItem("google_calendar_access_token")
+              localStorage.removeItem("google_calendar_refresh_token")
+              localStorage.removeItem("google_calendar_token_expiry")
+              setIsConnected(false)
+            }
+          } catch (error) {
+            console.error("Token refresh failed:", error)
+            setIsConnected(false)
+          }
+        } else if (!isExpired) {
+          setAccessToken(storedAccessToken)
+          setIsConnected(true)
+          await loadCalendarEvents(storedAccessToken)
+        } else {
+          setIsConnected(false)
+        }
       } else {
         setIsConnected(false)
       }
@@ -61,13 +90,40 @@ export function CalendarModal({ isOpen, onClose }: CalendarModalProps) {
     checkConnection()
   }, [currentUser])
 
+  const refreshAccessToken = async (refreshToken: string): Promise<string | null> => {
+    try {
+      const response = await fetch("/api/google-auth?action=refresh", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ refreshToken }),
+      })
+
+      const data = await response.json()
+
+      if (response.ok && data.access_token) {
+        // Store the new token
+        localStorage.setItem("google_calendar_access_token", data.access_token)
+        localStorage.setItem("google_calendar_token_expiry", data.expiry_date || (Date.now() + 3600000).toString())
+        return data.access_token
+      }
+
+      return null
+    } catch (error) {
+      console.error("Error refreshing token:", error)
+      return null
+    }
+  }
+
   const loadCalendarEvents = async (token: string) => {
     try {
       const timeMin = new Date().toISOString()
       const timeMax = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
+      const refreshToken = localStorage.getItem("google_calendar_refresh_token")
 
       const response = await fetch(
-        `/api/calendar?action=list-events&accessToken=${token}&timeMin=${timeMin}&timeMax=${timeMax}`,
+        `/api/calendar?action=list-events&accessToken=${token}&refreshToken=${refreshToken || ''}&timeMin=${timeMin}&timeMax=${timeMax}`,
       )
       const data = await response.json()
 
@@ -146,7 +202,7 @@ export function CalendarModal({ isOpen, onClose }: CalendarModalProps) {
             clearInterval(checkClosed)
             setIsConnecting(false)
 
-            const token = localStorage.getItem("google_calendar_token")
+            const token = localStorage.getItem("google_calendar_access_token")
             if (token) {
               setAccessToken(token)
               setIsConnected(true)
@@ -356,10 +412,9 @@ export function CalendarModal({ isOpen, onClose }: CalendarModalProps) {
                       className={`
                         p-3 h-16 border border-border cursor-pointer hover:bg-muted/50 transition-colors rounded-lg
                         ${date ? "bg-background" : "bg-muted/20"}
-                        ${
-                          selectedDate && date && selectedDate.toDateString() === date.toDateString()
-                            ? "bg-accent text-accent-foreground"
-                            : ""
+                        ${selectedDate && date && selectedDate.toDateString() === date.toDateString()
+                          ? "bg-accent text-accent-foreground"
+                          : ""
                         }
                       `}
                       onClick={() => date && setSelectedDate(date)}
