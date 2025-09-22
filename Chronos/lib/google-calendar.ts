@@ -46,6 +46,21 @@ export class GoogleCalendarService {
     return tokens;
   }
 
+  // Refresh access token using refresh token
+  async refreshToken(refreshToken: string) {
+    if (!this.oauth2Client) {
+      throw new Error('Google Calendar service is not configured');
+    }
+
+    this.oauth2Client.setCredentials({
+      refresh_token: refreshToken
+    });
+
+    const { credentials } = await this.oauth2Client.refreshAccessToken();
+    this.oauth2Client.setCredentials(credentials);
+    return credentials;
+  }
+
   // Set credentials for API calls
   setCredentials(tokens: any) {
     this.oauth2Client.setCredentials(tokens);
