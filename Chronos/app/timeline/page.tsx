@@ -389,11 +389,33 @@ export default function TimelinePage() {
             .slice(0, 3)
 
           if (items.length > 0) {
+            // Generate a concise description based on the year and focus areas
+            const generateConciseDescription = (year: string, items: string[]): string => {
+              const yearNum = parseInt(year)
+              const currentYear = new Date().getFullYear()
+              const yearDiff = yearNum - currentYear
+              
+              // Create theme-based descriptions based on year progression
+              if (yearDiff <= 1) {
+                return "Foundation Building Year"
+              } else if (yearDiff <= 2) {
+                return "Skill Development Phase"
+              } else if (yearDiff <= 3) {
+                return "Growth & Expansion"
+              } else if (yearDiff <= 4) {
+                return "Leadership & Impact"
+              } else if (yearDiff <= 5) {
+                return "Mastery & Innovation"
+              } else {
+                return "Long-term Vision"
+              }
+            }
+
             aiYearlyMilestones.push({
               id: `ai-year-${index}`,
               year: year,
               title: `Year ${year} Focus Areas`,
-              description: items.join(" • "),
+              description: generateConciseDescription(year, items),
               category: "AI Generated",
               completed: false,
               image: undefined,
