@@ -39,3 +39,35 @@ export async function GET(request: NextRequest) {
     );
   }
 }
+
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json();
+    const { action, refreshToken } = body;
+
+    console.log('Google Auth POST API called with action:', action);
+
+    const googleCalendarService = new GoogleCalendarService();
+
+    switch (action) {
+      case 'refresh':
+        if (!refreshToken) {
+          return NextResponse.json({ error: 'Refresh token required' }, { status: 400 });
+        }
+
+        console.log('Refreshing access token...');
+        const newTokens = await googleCalendarService.refreshToken(refreshToken);
+        console.log('New tokens received:', newTokens);
+        return NextResponse.json(newTokens);
+
+      default:
+        return NextResponse.json({ error: 'Invalid action' }, { status: 400 });
+    }
+  } catch (error) {
+    console.error('Google OAuth refresh error:', error);
+    return NextResponse.json(
+      { error: 'Failed to refresh Google OAuth token' },
+      { status: 500 }
+    );
+  }
+}
