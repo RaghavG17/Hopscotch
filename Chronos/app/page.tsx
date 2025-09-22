@@ -72,7 +72,7 @@ export default function LandingPage() {
       <section
         className="relative py-24 lg:py-40 overflow-hidden bg-cover bg-center bg-no-repeat"
         style={{
-          backgroundImage: "url('/gradient.png'), url('/background.jpg')",
+          backgroundImage: "url('/gradient.png')",
           backgroundBlendMode: "overlay",
         }}
         aria-label="Hero background image"
@@ -122,8 +122,8 @@ export default function LandingPage() {
                 </span>
                 <br />
                 <span className="bg-gradient-to-r from-foreground via-foreground/90 to-foreground bg-clip-text text-transparent font-black relative">
-                <span
-                    className="absolute inset-0 bg-gradient-to-r from-foreground via-foreground/90 to-foreground bg-clip-text opacity-60"
+                  <span
+                    className="absolute inset-0 bg-gradient-to-r from-foreground via-foreground/90 to-foreground bg-clip-text "
                     aria-hidden="true"
                   >
                     Visual Story

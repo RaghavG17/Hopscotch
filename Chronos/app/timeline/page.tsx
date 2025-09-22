@@ -19,9 +19,9 @@ import {
   Save,
   X,
   ChevronDown,
-  ChevronUp,
   Trophy,
   Calendar,
+  CalendarDays,
   Upload,
   ImageIcon,
 } from "lucide-react"
@@ -29,6 +29,7 @@ import { AppNavbar } from "@/components/ui/app-navbar"
 import { useAuth } from "@/lib/auth-context"
 import { useUserProgress } from "@/context/UserProgressContext"
 import { CalendarModal } from "@/components/calendar"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 
 interface Milestone {
   id: string
@@ -132,6 +133,25 @@ export default function TimelinePage() {
   ]
 
   const [viewMode, setViewMode] = useState<"yearly" | "monthly">("yearly")
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Element
+      if (!target.closest('.dropdown-container')) {
+        setIsDropdownOpen(false)
+      }
+    }
+
+    if (isDropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside)
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [isDropdownOpen])
   const [aiReport, setAiReport] = useState<{ content: string; generatedAt: string } | null>(null)
   const [isGenerating, setIsGenerating] = useState(false)
   const [isCalendarOpen, setIsCalendarOpen] = useState(false)
@@ -597,27 +617,59 @@ export default function TimelinePage() {
 
       <div className="relative">
         <div className="container mx-auto px-4 py-4 flex items-center justify-end">
-          {/* View Mode Toggle */}
-          <Button
-            onClick={() => setViewMode(viewMode === "yearly" ? "monthly" : "yearly")}
-            variant="outline"
-            size="sm"
-            className="group hover:shadow-lg transition-all duration-300 px-4 py-2"
-          >
-            <div className="flex items-center space-x-2">
-              {viewMode === "yearly" ? (
-                <>
-                  <ChevronDown className="w-4 h-4 group-hover:translate-y-0.5 transition-transform" />
-                  <span className="text-sm font-medium">Monthly View</span>
-                </>
-              ) : (
-                <>
-                  <ChevronUp className="w-4 h-4 group-hover:-translate-y-0.5 transition-transform" />
-                  <span className="text-sm font-medium">Yearly View</span>
-                </>
-              )}
-            </div>
-          </Button>
+          {/* Custom View Mode Dropdown */}
+          <div className="relative dropdown-container">
+            <Button
+              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              variant="outline"
+              size="sm"
+              className="group hover:shadow-lg transition-all duration-300 px-4 py-2"
+            >
+              <div className="flex items-center space-x-2">
+                {viewMode === "yearly" ? (
+                  <Calendar className="w-4 h-4" />
+                ) : (
+                  <CalendarDays className="w-4 h-4" />
+                )}
+                <span className="text-sm font-medium">
+                  {viewMode === "yearly" ? "Yearly View" : "Monthly View"}
+                </span>
+                <ChevronDown className={`w-4 h-4 transition-transform ${isDropdownOpen ? "rotate-180" : ""}`} />
+              </div>
+            </Button>
+            
+            {/* Dropdown Menu */}
+            {isDropdownOpen && (
+              <div className="absolute right-0 mt-2 w-48 bg-background border border-border rounded-md shadow-lg z-50">
+                <div className="py-1">
+                  <button
+                    onClick={() => {
+                      setViewMode("yearly")
+                      setIsDropdownOpen(false)
+                    }}
+                    className={`w-full px-4 py-2 text-left text-sm flex items-center hover:bg-muted ${
+                      viewMode === "yearly" ? "bg-primary text-accent-foreground" : ""
+                    }`}
+                  >
+                    <Calendar className="w-4 h-4 mr-2" />
+                    Yearly View
+                  </button>
+                  <button
+                    onClick={() => {
+                      setViewMode("monthly")
+                      setIsDropdownOpen(false)
+                    }}
+                    className={`w-full px-4 py-2 text-left text-sm flex items-center hover:bg-muted ${
+                      viewMode === "monthly" ? "bg-primary text-accent-foreground" : ""
+                    }`}
+                  >
+                    <CalendarDays className="w-4 h-4 mr-2" />
+                    Monthly View
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
@@ -647,7 +699,7 @@ export default function TimelinePage() {
                     <h3 className="text-xl font-semibold">Get Your Personalized AI Timeline</h3>
                   </div>
                   <p className="text-muted-foreground mb-4">
-                    Generate a detailed, personalized timeline with specific goals and actionable steps based on your
+                    Create a detailed, personalized timeline with specific goals and actionable steps based on your
                     aspirations.
                   </p>
                   <Button
@@ -806,7 +858,7 @@ export default function TimelinePage() {
                 ) : (
                   <>
                     <Sparkles className="w-4 h-4 mr-2 group-hover:rotate-12 transition-transform" />
-                    Generate New Timeline
+                    Create New Timeline
                   </>
                 )}
               </Button>
@@ -934,7 +986,7 @@ export default function TimelinePage() {
                       className="px-4 py-2 bg-transparent"
                     >
                       <Sparkles className="w-4 h-4 mr-2" />
-                      Generate Suggestions
+                      Add Suggestions
                     </Button>
                   </div>
 

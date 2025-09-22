@@ -84,6 +84,11 @@ export default function FurtherQuestionsPage() {
   const [report, setReport] = useState<{ content: string; generatedAt: string } | null>(null)
   const [showReport, setShowReport] = useState(false)
   const [isCreatingTimeline, setIsCreatingTimeline] = useState(false)
+  
+  // Collapsible sections state
+  const [isPersonalOpen, setIsPersonalOpen] = useState(false)
+  const [isProfessionalOpen, setIsProfessionalOpen] = useState(false)
+  const [isSocialOpen, setIsSocialOpen] = useState(false)
   const handleInputChange = (field: keyof FurtherQuestionsData, value: string) => {
     const newAnswers = {
       ...answers,
@@ -524,23 +529,34 @@ export default function FurtherQuestionsPage() {
           <form onSubmit={handleSubmit} className="space-y-8">
             {/* Personal Growth */}
             <Card className="border-2 border-accent/10 shadow-lg">
-              <CardHeader>
+              <CardHeader 
+                className="cursor-pointer hover:bg-muted/50 transition-colors"
+                onClick={() => setIsPersonalOpen(!isPersonalOpen)}
+              >
                 <CardTitle className="flex items-center justify-between text-2xl">
                   <div className="flex items-center">
                     <User className="w-6 h-6 mr-3 text-accent" />
                     Personal Growth
+                    <Badge variant="secondary" className="text-xs ml-3">
+                      Optional
+                    </Badge>
                   </div>
-                  <Badge variant="secondary" className="text-xs">
-                    Optional
-                  </Badge>
+                  {isPersonalOpen ? (
+                    <ChevronUp className="w-5 h-5 text-muted-foreground" />
+                  ) : (
+                    <ChevronDown className="w-5 h-5 text-muted-foreground" />
+                  )}
                 </CardTitle>
-                <p className="text-muted-foreground">
-                  Developing self-awareness, confidence, emotional intelligence, discipline, and a stronger sense of identity
-                </p>
+                {isPersonalOpen && (
+                  <p className="text-muted-foreground">
+                    Developing self-awareness, confidence, emotional intelligence, discipline, and a stronger sense of identity
+                  </p>
+                )}
               </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="space-y-4">
-                  <Label htmlFor="personalShortTermGoal" className="text-lg font-medium">
+              {isPersonalOpen && (
+                <CardContent className="space-y-6">
+                  <div className="space-y-4">
+                    <Label htmlFor="personalShortTermGoal" className="text-lg font-medium">
                     What's your short-term personal growth goal?
                   </Label>
                   <Textarea
@@ -624,28 +640,40 @@ export default function FurtherQuestionsPage() {
                       </p>
                     )}
                 </div>
-              </CardContent>
+                </CardContent>
+              )}
             </Card>
 
             {/* Professional Growth */}
             <Card className="border-2 border-accent/10 shadow-lg">
-              <CardHeader>
+              <CardHeader 
+                className="cursor-pointer hover:bg-muted/50 transition-colors"
+                onClick={() => setIsProfessionalOpen(!isProfessionalOpen)}
+              >
                 <CardTitle className="flex items-center justify-between text-2xl">
                   <div className="flex items-center">
                     <Briefcase className="w-6 h-6 mr-3 text-accent" />
                     Professional Growth
+                    <Badge variant="secondary" className="text-xs ml-3">
+                      Optional
+                    </Badge>
                   </div>
-                  <Badge variant="secondary" className="text-xs">
-                    Optional
-                  </Badge>
+                  {isProfessionalOpen ? (
+                    <ChevronUp className="w-5 h-5 text-muted-foreground" />
+                  ) : (
+                    <ChevronDown className="w-5 h-5 text-muted-foreground" />
+                  )}
                 </CardTitle>
-                <p className="text-muted-foreground">
-                  Expanding knowledge, skills, and experiences in education, career, or creative pursuits
-                </p>
+                {isProfessionalOpen && (
+                  <p className="text-muted-foreground">
+                    Expanding knowledge, skills, and experiences in education, career, or creative pursuits
+                  </p>
+                )}
               </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="space-y-4">
-                  <Label htmlFor="professionalShortTermGoal" className="text-lg font-medium">
+              {isProfessionalOpen && (
+                <CardContent className="space-y-6">
+                  <div className="space-y-4">
+                    <Label htmlFor="professionalShortTermGoal" className="text-lg font-medium">
                     What's your short-term professional goal?
                   </Label>
                   <Textarea
@@ -729,28 +757,40 @@ export default function FurtherQuestionsPage() {
                       </p>
                     )}
                 </div>
-              </CardContent>
+                </CardContent>
+              )}
             </Card>
 
             {/* Social Growth */}
             <Card className="border-2 border-accent/10 shadow-lg">
-              <CardHeader>
+              <CardHeader 
+                className="cursor-pointer hover:bg-muted/50 transition-colors"
+                onClick={() => setIsSocialOpen(!isSocialOpen)}
+              >
                 <CardTitle className="flex items-center justify-between text-2xl">
                   <div className="flex items-center">
                     <Users className="w-6 h-6 mr-3 text-accent" />
                     Social Growth
+                    <Badge variant="secondary" className="text-xs ml-3">
+                      Optional
+                    </Badge>
                   </div>
-                  <Badge variant="secondary" className="text-xs">
-                    Optional
-                  </Badge>
+                  {isSocialOpen ? (
+                    <ChevronUp className="w-5 h-5 text-muted-foreground" />
+                  ) : (
+                    <ChevronDown className="w-5 h-5 text-muted-foreground" />
+                  )}
                 </CardTitle>
-                <p className="text-muted-foreground">
-                  Strengthening relationships, communication, empathy, and teamwork. Building community and contributing positively to society
-                </p>
+                {isSocialOpen && (
+                  <p className="text-muted-foreground">
+                    Strengthening relationships, communication, empathy, and teamwork. Building community and contributing positively to society
+                  </p>
+                )}
               </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="space-y-4">
-                  <Label htmlFor="socialShortTermGoal" className="text-lg font-medium">
+              {isSocialOpen && (
+                <CardContent className="space-y-6">
+                  <div className="space-y-4">
+                    <Label htmlFor="socialShortTermGoal" className="text-lg font-medium">
                     What's your short-term social growth goal?
                   </Label>
                   <Textarea
@@ -834,7 +874,8 @@ export default function FurtherQuestionsPage() {
                       </p>
                     )}
                 </div>
-              </CardContent>
+                </CardContent>
+              )}
             </Card>
 
 
