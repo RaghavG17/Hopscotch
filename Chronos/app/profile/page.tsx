@@ -127,9 +127,9 @@ const ProfilePage = () => {
       : ["Complete questionnaire to see interests"],
     email: currentUser?.email || "",
     stats: {
-      timelineEvents: 0, // TODO: Get from database
-      friends: 0, // TODO: Get from database
-      achievements: 0, // TODO: Get from database
+      timelineEvents: 10, // Hardcoded milestones
+      friends: 4, // Hardcoded friends
+      achievements: 3, // Hardcoded achievements
     },
   }
 
@@ -365,6 +365,71 @@ const ProfilePage = () => {
                             >
                               {interest}
                             </span>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Recent Milestones */}
+                      <div className="mt-8">
+                        <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center">
+                          <Calendar className="w-5 h-5 mr-2 text-accent" />
+                          Recent Milestones
+                        </h3>
+                        <div className="grid gap-3">
+                          {[
+                            { title: "Graduated from University", date: "2024", category: "Education" },
+                            { title: "Started First Job", date: "2024", category: "Career" },
+                            { title: "Moved to New City", date: "2023", category: "Personal" },
+                            { title: "Completed Internship", date: "2023", category: "Career" },
+                            { title: "Joined Study Abroad Program", date: "2022", category: "Education" },
+                            { title: "Learned New Language", date: "2022", category: "Personal" },
+                            { title: "Started University", date: "2020", category: "Education" },
+                            { title: "Got Driver's License", date: "2019", category: "Personal" },
+                            { title: "High School Graduation", date: "2019", category: "Education" },
+                            { title: "First Part-time Job", date: "2018", category: "Career" }
+                          ].map((milestone, index) => (
+                            <div key={index} className="flex items-center justify-between p-3 bg-card/50 rounded-lg border border-border hover:bg-card/80 transition-colors">
+                              <div className="flex items-center space-x-3">
+                                <div className="w-2 h-2 bg-accent rounded-full"></div>
+                                <div>
+                                  <p className="font-medium text-foreground">{milestone.title}</p>
+                                  <p className="text-sm text-muted-foreground">{milestone.category}</p>
+                                </div>
+                              </div>
+                              <span className="text-sm text-muted-foreground">{milestone.date}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Friends */}
+                      <div className="mt-8">
+                        <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center">
+                          <User className="w-5 h-5 mr-2 text-primary" />
+                          Friends
+                        </h3>
+                        <div className="grid grid-cols-2 gap-4">
+                          {[
+                            { name: "Sarah Chen", status: "Software Engineer", avatar: "/sarah-chen.jpg" },
+                            { name: "Marcus Johnson", status: "Student", avatar: "/marcus-johnson.jpg" },
+                            { name: "Emily Rodriguez", status: "Designer", avatar: "/emily-rodriguez.jpg" },
+                            { name: "Alex Thompson", status: "Marketing Manager", avatar: "/placeholder-user.jpg" }
+                          ].map((friend, index) => (
+                            <div key={index} className="flex items-center space-x-3 p-3 bg-card/50 rounded-lg border border-border hover:bg-card/80 transition-colors">
+                              <div className="w-10 h-10 rounded-full overflow-hidden">
+                                <Image
+                                  src={friend.avatar}
+                                  alt={friend.name}
+                                  width={40}
+                                  height={40}
+                                  className="w-full h-full object-cover"
+                                />
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <p className="font-medium text-foreground truncate">{friend.name}</p>
+                                <p className="text-sm text-muted-foreground truncate">{friend.status}</p>
+                              </div>
+                            </div>
                           ))}
                         </div>
                       </div>
