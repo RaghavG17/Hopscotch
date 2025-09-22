@@ -215,7 +215,15 @@ export default function LandingPage() {
 
         {/* Timeline Demo */}
         <div className="text-center py-16 bg-card/50 rounded-3xl mx-6 shadow-cherry-soft">
-          <p className="text-muted-foreground text-lg">Replace with a screenshot of our timeline</p>
+          <div className="max-w-4xl mx-auto px-6">
+            <Image
+              src="/timeline.png"
+              alt="Timeline Preview"
+              width={800}
+              height={400}
+              className="w-full h-auto rounded-lg shadow-lg mx-auto"
+            />
+          </div>
         </div>
       </section>
 
