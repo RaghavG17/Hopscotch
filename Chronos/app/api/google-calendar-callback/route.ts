@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
         const tokens = await googleCalendarService.getTokens(code);
         console.log('Tokens received:', tokens);
 
-        // Return a page that stores the token and closes the popup
+        // Return a page that stores both access and refresh tokens and closes the popup
         const html = `
           <!DOCTYPE html>
           <html>
@@ -34,8 +34,11 @@ export async function GET(request: NextRequest) {
                 <p>You can close this window.</p>
               </div>
               <script>
-                localStorage.setItem('google_calendar_token', '${tokens.access_token}');
-                console.log('Token stored:', '${tokens.access_token}');
+                // Store both access and refresh tokens
+                localStorage.setItem('google_calendar_access_token', '${tokens.access_token}');
+                localStorage.setItem('google_calendar_refresh_token', '${tokens.refresh_token || ''}');
+                localStorage.setItem('google_calendar_token_expiry', '${tokens.expiry_date || Date.now() + 3600000}');
+                console.log('Tokens stored:', { access: '${tokens.access_token}', refresh: '${tokens.refresh_token || 'none'}' });
                 window.close();
               </script>
             </body>
