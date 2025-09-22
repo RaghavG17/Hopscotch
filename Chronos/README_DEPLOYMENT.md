@@ -1,4 +1,4 @@
-# 🚀 Chronos Deployment Ready
+# 🚀 Hopscotch Deployment Ready
 
 ## ✅ **YES, IT WILL WORK!**
 
@@ -29,7 +29,7 @@ The centralized API key management system has been successfully implemented and 
 ### **Step 1: Get the Code**
 ```bash
 git clone <repository-url>
-cd Chronos
+cd Hopscotch
 ```
 
 ### **Step 2: Install Dependencies**
@@ -92,7 +92,7 @@ API Routes & Components
 
 The app automatically shows configuration status on startup:
 ```
-🔧 Chronos Configuration Status:
+🔧 Hopscotch Configuration Status:
 ================================
 ✅ GROQ: ready
 ✅ GOOGLE: ready (if configured)

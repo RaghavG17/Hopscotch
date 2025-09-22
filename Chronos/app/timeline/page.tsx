@@ -83,6 +83,12 @@ function CherryBlossom({
   )
 }
 
+// Seeded random function for consistent cherry blossom positions
+function seededRandom(seed: number): number {
+  const x = Math.sin(seed) * 10000
+  return x - Math.floor(x)
+}
+
 //gen random position specifcslly around milestone card
 //tbh avoidtoo far scattering
 function generateCherryBlossomPositions(
@@ -97,14 +103,17 @@ function generateCherryBlossomPositions(
   const baseY = isTopPosition ? 150 : 350 //same w  vertical center
 
   for (let i = 0; i < taskCount; i++) {
+    // Use seeded random for consistent positions
+    const seed = milestoneIndex * 1000 + i * 100 + (isTopPosition ? 0 : 1)
+    
     //gen radndom offset
-    const offsetRadius = 60 + Math.random() * 42
-    const angle = Math.random() * 2 * Math.PI
+    const offsetRadius = 60 + seededRandom(seed) * 42
+    const angle = seededRandom(seed + 1) * 2 * Math.PI
 
     const x = baseX + Math.cos(angle) * offsetRadius
     const y = baseY + Math.sin(angle) * offsetRadius
-    const rotation = Math.random() * 360
-    const scale = 3 + Math.random() * 3
+    const rotation = seededRandom(seed + 2) * 360
+    const scale = 3 + seededRandom(seed + 3) * 3
     const opacity = 1 //keep 1 opacity bc transparant image alr
 
     positions.push({ x, y, rotation, scale, opacity })
@@ -716,7 +725,7 @@ export default function TimelinePage() {
 
           <div className="relative">
             <div className="overflow-x-auto pb-8">
-              <div className="relative min-w-max px-12">
+              <div className="relative min-w-max px-12 overflow-hidden">
                 {/* Cherry Blossoms - Render all positions */}
                 {cherryBlossomData.map((blossom, index) => (
                   <CherryBlossom

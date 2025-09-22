@@ -99,7 +99,7 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
                     >
                         <X className="w-5 h-5" />
                     </button>
-                    <CardTitle className="text-2xl text-center">Welcome to Chronos</CardTitle>
+                    <CardTitle className="text-2xl text-center">Welcome to Hopscotch</CardTitle>
                     <CardDescription className="text-center">
                         Sign in to your account or create a new one
                     </CardDescription>

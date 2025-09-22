@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * Chronos Setup Test Script
+ * Hopscotch Setup Test Script
  * 
  * This script tests the centralized API key management system
  * to ensure it works properly for all team members.
@@ -10,7 +10,7 @@
 const fs = require('fs');
 const path = require('path');
 
-console.log('🧪 Testing Chronos Setup...\n');
+console.log('🧪 Testing Hopscotch Setup...\n');
 
 // Test 1: Check if .env.example exists
 console.log('1. Checking .env.example file...');

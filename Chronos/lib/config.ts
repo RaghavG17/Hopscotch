@@ -109,7 +109,7 @@ export function logConfigurationStatus() {
     const validation = validateConfiguration();
     const serviceStatus = getServiceStatus();
 
-    console.log('\n🔧 Chronos Configuration Status:');
+    console.log('\n🔧 Hopscotch Configuration Status:');
     console.log('================================');
 
     Object.entries(serviceStatus).forEach(([service, status]) => {

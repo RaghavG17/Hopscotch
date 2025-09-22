@@ -7,7 +7,7 @@ import { ConfigInitializer } from '@/components/config-initializer'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Chronos - Turn Your Life Into a Visual Story',
+  title: 'Hopscotch - Turn Your Life Into a Visual Story',
   description: 'Build interactive timelines of your milestones, get AI-powered goal suggestions, and connect with others who share your aspirations.',
   generator: 'Next.js',
   icons: {

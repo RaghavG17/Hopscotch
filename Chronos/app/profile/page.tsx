@@ -107,7 +107,7 @@ const ProfilePage = () => {
     displayName: currentUser?.displayName || questionnaireData?.name || "User",
     bio: questionnaireData?.hobbies
       ? `Passionate about ${questionnaireData.hobbies}. ${questionnaireData.interests || "Always exploring new interests and opportunities."}`
-      : "Welcome to your Chronos profile! Complete the questionnaire to personalize your experience.",
+      : "Welcome to your Hopscotch profile! Complete the questionnaire to personalize your experience.",
     profilePic: profilePicture || currentUser?.photoURL || "/placeholder.svg",
     location: questionnaireData?.location || "Location not set",
     joinDate: new Date(currentUser?.metadata?.creationTime || Date.now()).toLocaleDateString("en-US", {
@@ -174,7 +174,7 @@ const ProfilePage = () => {
                   </CardHeader>
                   <CardContent className="text-center">
                     <p className="text-sm text-muted-foreground">
-                      Join thousands of users building their life stories with Chronos
+                      Join thousands of users building their life stories with Hopscotch
                     </p>
                   </CardContent>
                 </Card>

@@ -3,9 +3,9 @@
 const fs = require('fs');
 const path = require('path');
 
-console.log('🚀 Setting up Chronos environment...\n');
+console.log('🚀 Setting up Hopscotch environment...\n');
 
-const envContent = `# Chronos Environment Configuration
+const envContent = `# Hopscotch Environment Configuration
 # This file contains the shared API keys for team use
 
 # =============================================================================

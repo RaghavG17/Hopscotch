@@ -498,13 +498,13 @@ export default function FurtherQuestionsPage() {
             <div className="w-8 h-8 overflow-hidden">
               <Image
                 src="/logo.png"
-                alt="Chronos Logo"
+                alt="Hopscotch Logo"
                 width={32}
                 height={32}
                 className="w-full h-full object-contain"
               />
             </div>
-            <span className="text-xl font-bold text-foreground">Chronos</span>
+            <span className="text-xl font-bold text-foreground">Hopscotch</span>
           </Link>
           <div className="text-sm text-muted-foreground">Step 2 of 2</div>
         </div>

@@ -1,5 +1,6 @@
 "use client"
 
+import React from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -23,14 +24,14 @@ export default function LandingPage() {
             <div className="w-10 h-10 rounded-xl overflow-hidden shadow-cherry-soft">
               <Image
                 src="/logo.png"
-                alt="Chronos Logo"
+                alt="Hopscotch Logo"
                 width={40}
                 height={40}
                 className="w-full h-full object-contain"
               />
             </div>
             <span className="text-2xl font-bold text-foreground hover:translate-x-1 transition-transform duration-300 cursor-pointer">
-              Chronos
+              Hopscotch
             </span>
           </div>
           <nav className="hidden md:flex items-center space-x-8">
@@ -70,22 +71,33 @@ export default function LandingPage() {
 
       {/* Hero Section */}
       <section
-        className="relative py-24 lg:py-40 overflow-hidden bg-cover bg-center bg-no-repeat"
-        style={{
-          backgroundImage: "url('/gradient.png')",
-          backgroundBlendMode: "overlay",
-        }}
-        aria-label="Hero background image"
+        className="relative py-24 lg:py-40 overflow-hidden"
+        aria-label="Hero background video"
       >
+        {/* Hero Video Background */}
+        <div className="absolute inset-0 w-full h-full">
+          <video
+            src="/hero.mp4"
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="w-full h-full object-cover"
+            style={{ transform: 'scale(1.1)' }}
+          >
+            Your browser does not support the video tag.
+          </video>
+        </div>
+
+        {/* Lighter overlay for text readability */}
         <div
-          className="absolute inset-0 bg-gradient-to-br from-background/40 via-accent/5 to-background/30"
+          className="absolute inset-0 bg-foreground/10"
           aria-hidden="true"
         ></div>
 
-        {/* Gradient overlay for opacity control */}
+        {/* Additional gradient overlay for better text contrast */}
         <div
-          className="absolute inset-0 opacity-30 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: "url('/gradient.png')" }}
+          className="absolute inset-0 bg-gradient-to-br from-black/20 via-black/15 to-black/25"
           aria-hidden="true"
         ></div>
 
@@ -117,31 +129,31 @@ export default function LandingPage() {
               <div className="absolute -bottom-5 left-1/2 transform -translate-x-1/2 w-24 h-px bg-gradient-to-r from-transparent via-accent/30 to-transparent opacity-40 blur-sm"></div>
 
               <h1 className="text-5xl md:text-7xl font-bold mb-0 text-balance leading-tight relative">
-                <span className="bg-gradient-to-r from-foreground via-foreground/90 to-foreground bg-clip-text text-transparent font-medium">
+                <span className="bg-gradient-to-r from-white via-white/95 to-white bg-clip-text text-transparent font-medium drop-shadow-lg">
                   Turn Your Life Into a
                 </span>
                 <br />
-                <span className="bg-gradient-to-r from-foreground via-foreground/90 to-foreground bg-clip-text text-transparent font-black relative">
+                <span className="bg-gradient-to-r from-white via-white/95 to-white bg-clip-text text-transparent font-black relative drop-shadow-lg">
                   <span
-                    className="absolute inset-0 bg-gradient-to-r from-foreground via-foreground/90 to-foreground bg-clip-text "
+                    className="absolute inset-0 bg-gradient-to-r from-white via-white/95 to-white bg-clip-text drop-shadow-lg"
                     aria-hidden="true"
                   >
                     Visual Story
                   </span>
                   <span
-                    className="absolute inset-0 bg-gradient-to-r from-foreground via-foreground/90 to-foreground bg-clip-text opacity-60"
+                    className="absolute inset-0 bg-gradient-to-r from-white via-white/95 to-white bg-clip-text opacity-60 drop-shadow-lg"
                     aria-hidden="true"
                   >
                     Visual Story
                   </span>
                   <span
-                    className="absolute inset-0 bg-gradient-to-r from-accent via-accent/80 to-accent bg-clip-text text-transparent blur-md opacity-40"
+                    className="absolute inset-0 bg-gradient-to-r from-accent via-accent/80 to-accent bg-clip-text text-transparent blur-md opacity-60 drop-shadow-lg"
                     aria-hidden="true"
                   >
                     Visual Story
                   </span>
                   <span
-                    className="absolute inset-0 bg-gradient-to-r from-accent via-accent/60 to-accent bg-clip-text text-transparent blur-lg opacity-20"
+                    className="absolute inset-0 bg-gradient-to-r from-accent via-accent/60 to-accent bg-clip-text text-transparent blur-lg opacity-30 drop-shadow-lg"
                     aria-hidden="true"
                   >
                     Visual Story
@@ -151,7 +163,7 @@ export default function LandingPage() {
               </h1>
             </div>
 
-            <p className="text-xl md:text-2xl text-muted-foreground mb-12 text-pretty max-w-3xl mx-auto leading-relaxed">
+            <p className="text-xl md:text-2xl text-white/90 mb-12 text-pretty max-w-3xl mx-auto leading-relaxed drop-shadow-lg">
               Build interactive timelines of your milestones, get AI-powered goal suggestions, and connect with others
               who share your aspirations.
             </p>
@@ -340,7 +352,7 @@ export default function LandingPage() {
         <div className="container mx-auto px-6 text-center relative">
           <h2 className="text-4xl md:text-5xl font-bold mb-6 text-foreground">Ready to Start Your Journey?</h2>
           <p className="text-xl mb-12 text-foreground/90 max-w-3xl mx-auto leading-relaxed">
-            Join thousands of users who are already documenting their milestones and achieving their goals with Chronos.
+            Join thousands of users who are already documenting their milestones and achieving their goals with Hopscotch.
           </p>
           {currentUser ? (
             <Link href="/timeline">
@@ -376,13 +388,13 @@ export default function LandingPage() {
                 <div className="w-10 h-10 rounded-xl overflow-hidden shadow-cherry-soft">
                   <Image
                     src="/logo.png"
-                    alt="Chronos Icon"
+                    alt="Hopscotch Icon"
                     width={40}
                     height={40}
                     className="w-full h-full object-contain"
                   />
                 </div>
-                <span className="text-2xl font-bold text-foreground">Chronos</span>
+                <span className="text-2xl font-bold text-foreground">Hopscotch</span>
               </div>
               <p className="text-muted-foreground leading-relaxed">
                 Document your journey, achieve your goals, and connect with your community.
@@ -460,7 +472,7 @@ export default function LandingPage() {
             </div>
           </div>
           <div className="border-t border-border/50 mt-12 pt-8 text-center text-muted-foreground">
-            <p>&copy; 2025 Chronos. All rights reserved.</p>
+            <p>&copy; 2025 Hopscotch. All rights reserved.</p>
           </div>
         </div>
       </footer>

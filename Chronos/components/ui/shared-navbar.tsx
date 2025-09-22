@@ -50,13 +50,13 @@ export function SharedNavbar({ variant = "app", showNavigation = true }: SharedN
                     <div className="w-8 h-8 rounded-lg overflow-hidden">
                         <Image
                             src="/logo.png"
-                            alt="Chronos Logo"
+                            alt="Hopscotch Logo"
                             width={32}
                             height={32}
                             className="w-full h-full object-contain"
                         />
                     </div>
-                    <span className="text-xl font-bold text-foreground">Chronos</span>
+                    <span className="text-xl font-bold text-foreground">Hopscotch</span>
                 </Link>
 
                 {/* Navigation Links - Only show for app variant or when showNavigation is true */}

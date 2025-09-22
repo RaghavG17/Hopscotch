@@ -1,8 +1,8 @@
-# Chronos Setup Instructions
+# Hopscotch Setup Instructions
 
 ## 🔧 Centralized API Key Management
 
-Chronos uses a centralized API key management system that ensures seamless integration across all AI services and external APIs. This architecture allows all team members to use the same API keys consistently.
+Hopscotch uses a centralized API key management system that ensures seamless integration across all AI services and external APIs. This architecture allows all team members to use the same API keys consistently.
 
 ## 📋 Required API Keys
 
@@ -30,7 +30,7 @@ Chronos uses a centralized API key management system that ensures seamless integ
 1. **Clone the repository**
    ```bash
    git clone <repository-url>
-   cd Chronos
+   cd Hopscotch
    ```
 
 2. **Install dependencies**
@@ -78,7 +78,7 @@ The centralized configuration system works as follows:
 The system automatically logs configuration status on startup:
 
 ```
-🔧 Chronos Configuration Status:
+🔧 Hopscotch Configuration Status:
 ================================
 ✅ GROQ: ready
 ✅ GOOGLE: ready
